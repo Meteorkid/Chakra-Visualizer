@@ -1,0 +1,35 @@
+body{
+  margin:0;
+  overflow:hidden;
+  background:black;
+}
+
+video, canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  object-fit:cover;
+  transform:scaleX(-1);
+}
+
+.fx{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+
+#rasengan{
+  width:1600px;
+}
+
+#chidori{
+  width:2400px;
+}
+
+#fireball{
+  width: 2000px;
+  filter: brightness(4) saturate(3);
+}

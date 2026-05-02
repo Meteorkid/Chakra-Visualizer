@@ -1,0 +1,25 @@
+/* App.css */
+div {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  overflow: hidden;
+}
+
+video,
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+canvas.rasengan {
+  filter: drop-shadow(0 0 20px #00f) drop-shadow(0 0 40px #0ff);
+}
