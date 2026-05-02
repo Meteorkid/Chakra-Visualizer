@@ -1,16 +1,91 @@
-# React + Vite
+# Naruto Jutsu Hand Gesture Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A real-time hand gesture recognition web app built with React and MediaPipe Hands. Point your webcam and use hand gestures to cast Naruto jutsu visual effects overlaid on your live camera feed.
 
-Currently, two official plugins are available:
+## Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Naruto Jutsu Demo](https://i.imgur.com/placeholder.png)
 
-## React Compiler
+## Gestures
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Gesture | Effect |
+|---|---|
+| Open palm (left hand) | Rasengan |
+| Open palm (right hand) | Chidori |
+| Closed fist with thumb up | Fireball |
+| Pinch (thumb + index finger) | Hollow Purple |
 
-## Expanding the ESLint configuration
+## How It Works
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Uses **MediaPipe Hands** to track 21 hand landmarks per hand in real time
+- Detects hand poses by comparing distances between landmark points
+- Renders effects using the **Canvas 2D API** — Hollow Purple is a fully custom particle system with radial gradients and swirling ring animations at 60fps
+- Video effects (Rasengan, Chidori, Fireball) are overlaid using `mix-blend-mode: screen` for a transparent compositing effect
+- Supports **dual-hand tracking** simultaneously
+
+## Tech Stack
+
+- React 19
+- MediaPipe Hands
+- Vite
+- Canvas 2D API
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18+)
+- A webcam
+
+### Installation
+
+```bash
+git clone https://github.com/ubp-as/naruto-jutsu-visualizer.git
+cd naruto-jutsu-visualizer
+npm install
+```
+
+### Adding Video Assets
+
+The jutsu effect videos are not included in this repository due to file size. Add the following MP4 files to the `public/assets/` folder:
+
+```
+public/
+└── assets/
+    ├── rasengan.mp4
+    ├── chidori.mp4
+    └── fireball.mp4
+```
+
+### Running the App
+
+```bash
+npm run dev
+```
+
+Then open `https://localhost:5173` in your browser.
+
+> **Note:** The app requires **HTTPS** for webcam access. Vite is configured with a basic SSL certificate so use `https://` not `http://`. Your browser may show a security warning — click "Advanced" and proceed anyway.
+
+## Project Structure
+
+```
+naruto-jutsu/
+├── public/
+│   └── assets/          # Video effect files (not included)
+├── src/
+│   ├── components/
+│   │   └── Camera.jsx   # Main gesture detection and rendering logic
+│   ├── App.jsx
+│   ├── App.css
+│   ├── main.jsx
+│   ├── index.css
+│   └── style.css
+├── index.html
+├── package.json
+└── vite.config.js
+```
+
+## Author
+
+Abdullah Salman — [github.com/ubp-as](https://github.com/ubp-as)
