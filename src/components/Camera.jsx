@@ -367,7 +367,7 @@ export default function CameraComponent(){
         ref={rasenganRef}
         id="rasengan"
         className="fx"
-        src="/assets/rasengan.mp4"
+        src="/assets/naruto.mp4"
         muted
         loop
         style={{display:"none"}}
