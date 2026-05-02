@@ -43,7 +43,6 @@ export default function CameraComponent(){
   function checkTiger(pts){
     const wrist = pts[0];
     const thumbTip = pts[4];
-    const thumbIp = pts[3];
     const thumbMcp = pts[2];
 
     const indexTip = pts[8];  const indexPip = pts[6];
@@ -51,24 +50,22 @@ export default function CameraComponent(){
     const ringTip = pts[16];  const ringPip = pts[14];
     const pinkyTip = pts[20]; const pinkyPip = pts[18];
 
-    // Thumb must be pointing up (tip higher than its base)
     const thumbUp = thumbTip.y < thumbMcp.y - 0.05;
 
-    // All 4 fingers must be closed
     const indexClosed =
-      Math.hypot(indexTip.x-wrist.x, indexTip.y-wrist.y) 
+      Math.hypot(indexTip.x-wrist.x, indexTip.y-wrist.y) <
       Math.hypot(indexPip.x-wrist.x, indexPip.y-wrist.y);
 
     const middleClosed =
-      Math.hypot(middleTip.x-wrist.x, middleTip.y-wrist.y) 
+      Math.hypot(middleTip.x-wrist.x, middleTip.y-wrist.y) <
       Math.hypot(middlePip.x-wrist.x, middlePip.y-wrist.y);
 
     const ringClosed =
-      Math.hypot(ringTip.x-wrist.x, ringTip.y-wrist.y) 
+      Math.hypot(ringTip.x-wrist.x, ringTip.y-wrist.y) <
       Math.hypot(ringPip.x-wrist.x, ringPip.y-wrist.y);
 
     const pinkyClosed =
-      Math.hypot(pinkyTip.x-wrist.x, pinkyTip.y-wrist.y) 
+      Math.hypot(pinkyTip.x-wrist.x, pinkyTip.y-wrist.y) <
       Math.hypot(pinkyPip.x-wrist.x, pinkyPip.y-wrist.y);
 
     return thumbUp && indexClosed && middleClosed && ringClosed && pinkyClosed;
@@ -79,22 +76,21 @@ export default function CameraComponent(){
     const indexTip = pts[8];
     const dist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
 
-    // Middle, ring, pinky must be closed
     const wrist = pts[0];
     const middleTip = pts[12]; const middlePip = pts[10];
     const ringTip = pts[16];  const ringPip = pts[14];
     const pinkyTip = pts[20]; const pinkyPip = pts[18];
 
     const middleClosed =
-      Math.hypot(middleTip.x-wrist.x, middleTip.y-wrist.y) 
+      Math.hypot(middleTip.x-wrist.x, middleTip.y-wrist.y) <
       Math.hypot(middlePip.x-wrist.x, middlePip.y-wrist.y);
 
     const ringClosed =
-      Math.hypot(ringTip.x-wrist.x, ringTip.y-wrist.y) 
+      Math.hypot(ringTip.x-wrist.x, ringTip.y-wrist.y) <
       Math.hypot(ringPip.x-wrist.x, ringPip.y-wrist.y);
 
     const pinkyClosed =
-      Math.hypot(pinkyTip.x-wrist.x, pinkyTip.y-wrist.y) 
+      Math.hypot(pinkyTip.x-wrist.x, pinkyTip.y-wrist.y) <
       Math.hypot(pinkyPip.x-wrist.x, pinkyPip.y-wrist.y);
 
     return dist < 0.05 && middleClosed && ringClosed && pinkyClosed;
@@ -123,7 +119,6 @@ export default function CameraComponent(){
 
     ctx.save();
 
-    // Big outer atmospheric glow
     const atmosphereGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 4);
     atmosphereGrad.addColorStop(0, `rgba(138, 43, 226,${Math.min(0.25, size/200)})`);
     atmosphereGrad.addColorStop(0.5, `rgba(138, 43, 226,${Math.min(0.1, size/400)})`);
@@ -133,7 +128,6 @@ export default function CameraComponent(){
     ctx.fillStyle = atmosphereGrad;
     ctx.fill();
 
-    // Blue aura (left)
     const blueGrad = ctx.createRadialGradient(x - size*0.4, y, 0, x - size*0.4, y, size * 1.8);
     blueGrad.addColorStop(0, `rgba(60,140,255,${Math.min(0.7, size/80)})`);
     blueGrad.addColorStop(0.5, `rgba(30,80,220,${Math.min(0.4, size/150)})`);
@@ -143,7 +137,6 @@ export default function CameraComponent(){
     ctx.fillStyle = blueGrad;
     ctx.fill();
 
-    // Red aura (right)
     const redGrad = ctx.createRadialGradient(x + size*0.4, y, 0, x + size*0.4, y, size * 1.8);
     redGrad.addColorStop(0, `rgba(255,50,80,${Math.min(0.7, size/80)})`);
     redGrad.addColorStop(0.5, `rgba(220,20,60,${Math.min(0.4, size/150)})`);
@@ -153,7 +146,6 @@ export default function CameraComponent(){
     ctx.fillStyle = redGrad;
     ctx.fill();
 
-    // Swirling ring around orb
     const ringCount = 12;
     for(let i = 0; i < ringCount; i++){
       const angle = (i / ringCount) * Math.PI * 2 + Date.now() * 0.002;
@@ -168,7 +160,6 @@ export default function CameraComponent(){
       ctx.fill();
     }
 
-    // Core orb
     const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, size);
     coreGrad.addColorStop(0, `rgba(255,255,255,${Math.min(1, size/40)})`);
     coreGrad.addColorStop(0.2, `rgba(230,180,255,${Math.min(0.95, size/50)})`);
@@ -180,7 +171,6 @@ export default function CameraComponent(){
     ctx.fillStyle = coreGrad;
     ctx.fill();
 
-    // Inner white hot core
     const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 0.3);
     innerGrad.addColorStop(0, `rgba(255,255,255,${Math.min(1, size/30)})`);
     innerGrad.addColorStop(1, `rgba(255,220,255,0)`);
@@ -264,7 +254,6 @@ export default function CameraComponent(){
           const pinch = checkPinch(pts);
           const tiger = !open && !pinch && checkTiger(pts);
 
-          // Rasengan / Chidori
           power.current[idx] += open ? 0.05 : -0.15;
           power.current[idx] = Math.max(0, Math.min(1, power.current[idx]));
 
@@ -275,7 +264,6 @@ export default function CameraComponent(){
           }
           wasOpen.current[idx] = open;
 
-          // Fireball
           fireballPower.current[idx] += tiger ? 0.05 : -0.15;
           fireballPower.current[idx] = Math.max(0, Math.min(1, fireballPower.current[idx]));
 
@@ -288,7 +276,6 @@ export default function CameraComponent(){
           const wrist = pts[0];
           const knuckle = pts[9];
 
-          // Rasengan / Chidori display
           if(power.current[idx] > 0.01){
             const tx = (wrist.x + knuckle.x) / 2;
             const ty = (wrist.y + knuckle.y) / 2;
@@ -299,7 +286,6 @@ export default function CameraComponent(){
             vid.style.display = "block";
           }
 
-          // Fireball display
           if(fireballPower.current[idx] > 0.01){
             const tx = (wrist.x + knuckle.x) / 2;
             const ty = (wrist.y + knuckle.y) / 2;
@@ -309,7 +295,6 @@ export default function CameraComponent(){
             fireball.style.display = "block";
           }
 
-          // Hollow Purple
           if(pinch){
             pinchDetected = true;
             const thumbTip = pts[4];
