@@ -1,0 +1,616 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+
+/* ─── Reset & Root ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.tutorial-root {
+  min-height: 100vh;
+  background: #04060e;
+  color: #e2e8f0;
+  font-family: 'Rajdhani', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* ─── Background grid ──────────────────────────────────────── */
+.tutorial-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Particles canvas ─────────────────────────────────────── */
+.chakra-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Scanlines ────────────────────────────────────────────── */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Hero ─────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.hero.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.hero-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+.hero-title-link {
+  text-decoration: none;
+  display: inline-block;
+}
+.hero-title-link:hover .hero-title-en {
+  filter: drop-shadow(0 0 50px rgba(56,189,248,0.5));
+}
+.hero-title-en {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  background: linear-gradient(160deg, #f8fafc 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 40px rgba(56,189,248,0.2));
+  transition: filter 0.3s ease;
+}
+
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: #64748b;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+  font-weight: 500;
+}
+
+.hero-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+}
+.stat {
+  padding: 1rem 2rem;
+  text-align: center;
+}
+.stat-num {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  color: #f8fafc;
+  line-height: 1;
+}
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: #475569;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: #1e293b;
+}
+
+/* ─── Section label ────────────────────────────────────────── */
+.section-label {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #334155;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.3s;
+}
+.section-label.visible { opacity: 1; }
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #1e293b 50%, transparent);
+  max-width: 200px;
+}
+
+/* ─── Jutsu Grid ───────────────────────────────────────────── */
+.jutsu-grid {
+  position: relative;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  padding: 0 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.jutsu-grid.visible { opacity: 1; }
+
+/* ─── Jutsu Card ───────────────────────────────────────────── */
+.jutsu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: #080d18;
+  border: 1px solid #1a2236;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  color: #e2e8f0;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  padding: 0;
+  opacity: 0;
+  animation: cardReveal 0.5s ease forwards;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.jutsu-grid.visible .jutsu-card { animation-play-state: running; }
+
+.jutsu-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--c);
+  box-shadow: 0 0 30px var(--glow), 0 20px 40px rgba(0,0,0,0.4);
+}
+.jutsu-card:hover .card-glow-border {
+  opacity: 1;
+}
+
+.card-glow-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(ellipse at 50% 0%, var(--glow) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card-anime-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #475569;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #1e293b;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.card-illustration {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 1rem 0.5rem;
+  min-height: 130px;
+}
+
+.gesture-svg {
+  filter: drop-shadow(0 0 12px var(--c, #38bdf8));
+  animation: float-svg 3.5s ease-in-out infinite;
+}
+@keyframes float-svg {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.card-body {
+  padding: 0.75rem 1.25rem 0.5rem;
+}
+.card-kanji {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 0.8rem;
+  color: #334155;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
+}
+.card-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  color: var(--c);
+  line-height: 1;
+  margin-bottom: 0.6rem;
+}
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.card-gesture-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #1e293b;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid #0f1729;
+  margin-top: 0.5rem;
+}
+.card-hand {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.card-arrow {
+  font-size: 1rem;
+  color: #1e293b;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.jutsu-card:hover .card-arrow {
+  color: var(--c);
+  transform: translateX(4px);
+}
+
+/* ─── CTA Section ──────────────────────────────────────────── */
+.cta-section {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 3rem 2rem 4rem;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.6s;
+}
+.cta-section.visible { opacity: 1; }
+
+.launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 1.25rem 2.5rem;
+  cursor: pointer;
+  color: #e2e8f0;
+  font-family: 'Rajdhani', sans-serif;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.launch-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(167,139,250,0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.launch-btn:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 30px rgba(56,189,248,0.2), 0 20px 40px rgba(0,0,0,0.3);
+  transform: translateY(-3px);
+}
+.launch-btn:hover::before { opacity: 1; }
+
+.launch-icon {
+  font-size: 1.5rem;
+  color: #38bdf8;
+  animation: spin-slow 8s linear infinite;
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.launch-text { text-align: left; }
+.launch-main {
+  display: block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.1em;
+  color: #f8fafc;
+  line-height: 1;
+}
+.launch-sub {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.cta-hint {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #334155;
+}
+
+/* ─── Modal ────────────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  position: relative;
+  background: #06090f;
+  border: 1px solid var(--c);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 60px var(--glow), 0 40px 80px rgba(0,0,0,0.6);
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #1e293b;
+  background: rgba(255,255,255,0.04);
+  color: #64748b;
+  font-size: 1rem;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+  font-family: sans-serif;
+}
+.modal-close:hover {
+  background: rgba(255,255,255,0.08);
+  color: #e2e8f0;
+  border-color: #475569;
+}
+
+.modal-top {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  padding: 2.5rem;
+  border-bottom: 1px solid #0f172a;
+}
+
+.modal-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid #0f172a;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.modal-info { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.modal-anime {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #475569;
+}
+.modal-kanji {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  color: #334155;
+  letter-spacing: 0.1em;
+}
+.modal-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.05em;
+  color: var(--c);
+  line-height: 1;
+  filter: drop-shadow(0 0 20px var(--glow));
+}
+.modal-desc {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0.25rem;
+}
+.modal-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #64748b;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid #1e293b;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.modal-steps {
+  padding: 2rem 2.5rem;
+  border-bottom: 1px solid #0f172a;
+}
+.steps-heading {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #475569;
+  margin-bottom: 1rem;
+}
+.steps-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  counter-reset: steps;
+}
+.steps-list li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid #0f172a;
+  border-left: 3px solid var(--step-color, #38bdf8);
+  border-radius: 0 10px 10px 0;
+  padding: 0.75rem 1rem;
+}
+.step-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--step-color, #38bdf8);
+  letter-spacing: 0.05em;
+  min-width: 28px;
+}
+
+.modal-tip {
+  margin: 0 2.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(234, 179, 8, 0.06);
+  border: 1px solid rgba(234, 179, 8, 0.2);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ca8a04;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.tip-icon { font-size: 1rem; }
+
+.modal-launch-btn {
+  display: block;
+  width: calc(100% - 5rem);
+  margin: 1.5rem 2.5rem 2.5rem;
+  padding: 1.1rem;
+  background: var(--c);
+  border: none;
+  border-radius: 12px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.1em;
+  color: #04060e;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px var(--glow);
+}
+.modal-launch-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 40px var(--glow);
+  transform: translateY(-2px);
+}
+
+/* ─── Responsive ───────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .hero { padding: 3rem 1.25rem 2rem; }
+  .hero-title-en { font-size: clamp(3rem, 15vw, 5rem); }
+  .jutsu-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; padding: 0 1rem; }
+  .card-body { padding: 0.5rem 0.9rem 0.25rem; }
+  .card-name { font-size: 1.3rem; }
+  .card-footer { padding: 0.6rem 0.9rem 0.75rem; }
+  .modal-top { grid-template-columns: 1fr; gap: 1rem; }
+  .modal-top .modal-illustration { padding: 1rem; }
+  .modal-name { font-size: 2.2rem; }
+  .modal-steps { padding: 1.5rem; }
+  .modal-tip { margin: 0 1.5rem; margin-top: 1rem; }
+  .modal-launch-btn { width: calc(100% - 3rem); margin: 1.25rem 1.5rem 2rem; }
+  .hero-stats { flex-direction: column; gap: 0; }
+  .stat-divider { width: 80px; height: 1px; }
+}
+
+@media (max-width: 400px) {
+  .jutsu-grid { grid-template-columns: 1fr; }
+}
