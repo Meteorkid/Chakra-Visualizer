@@ -4,7 +4,7 @@ import { Camera } from "@mediapipe/camera_utils";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 
-export default function CameraComponent(){
+export default function CameraComponent({ onBack }){
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -393,6 +393,9 @@ export default function CameraComponent(){
         loop
         style={{display:"none"}}
       />
+      <button className="back-btn" onClick={onBack}>
+        ← Back
+      </button>
     </>
   );
 }
