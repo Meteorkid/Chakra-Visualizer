@@ -20,7 +20,7 @@ function App() {
         <Tutorial onStart={handleStart} />
       ) : (
         <div className="camera-view">
-          <Camera initialJutsu={initialJutsu} />
+          <Camera initialJutsu={initialJutsu} onBack={() => setShowCamera(false)} />
         </div>
       )}
     </>
