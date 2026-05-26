@@ -1,35 +1,50 @@
-body{
-  margin:0;
-  overflow:hidden;
-  background:black;
+/* style.css */
+
+body {
+  margin: 0;
+  background: black;
 }
 
-video, canvas{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100vw;
-  height:100vh;
-  object-fit:cover;
-  transform:scaleX(-1);
+/* Only the webcam feed gets mirrored + fullscreen */
+.camera-view #webcam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: scaleX(-1);
 }
 
-.fx{
-  position:absolute;
-  transform:translate(-50%,-50%);
-  pointer-events:none;
-  mix-blend-mode:screen;
+/* Landmark canvas mirrors to match the webcam */
+.camera-view #landmark-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  transform: scaleX(-1);
+  pointer-events: none;
 }
 
-#rasengan{
-  width:1600px;
+/* fx effect videos: positioned by JS, centered on hand, NOT mirrored */
+.fx {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
 
-#chidori{
-  width:2400px;
+#rasengan {
+  width: 1600px;
 }
 
-#fireball{
+#chidori {
+  width: 2400px;
+}
+
+#fireball {
   width: 2000px;
   filter: brightness(4) saturate(3);
 }
