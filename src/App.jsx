@@ -1,10 +1,30 @@
-import Camera from "./components/Camera";
-import "./App.css";
+import React, { useState } from 'react';
+import Tutorial from './components/Tutorial';
+import Camera from './components/Camera';
+import './App.css';
 
-export default function App() {
+function App() {
+  const [showCamera, setShowCamera] = useState(false);
+  const [initialJutsu, setInitialJutsu] = useState(null);
+
+  const handleStart = (jutsuId = null) => {
+    if (jutsuId) {
+      setInitialJutsu(jutsuId);
+    }
+    setShowCamera(true);
+  };
+
   return (
-    <div>
-      <Camera />
-    </div>
+    <>
+      {!showCamera ? (
+        <Tutorial onStart={handleStart} />
+      ) : (
+        <div className="camera-view">
+          <Camera initialJutsu={initialJutsu} />
+        </div>
+      )}
+    </>
   );
 }
+
+export default App;
