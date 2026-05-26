@@ -1,5 +1,6 @@
-/* App.css */
-div {
+/* App.css — scoped to .camera-view only so Tutorial layout is never affected */
+
+.camera-view {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -7,10 +8,11 @@ div {
   align-items: center;
   background-color: #000;
   overflow: hidden;
+  position: relative;
 }
 
-video,
-canvas {
+.camera-view video,
+.camera-view canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -20,6 +22,6 @@ canvas {
   pointer-events: none;
 }
 
-canvas.rasengan {
+.camera-view canvas.rasengan {
   filter: drop-shadow(0 0 20px #00f) drop-shadow(0 0 40px #0ff);
 }
