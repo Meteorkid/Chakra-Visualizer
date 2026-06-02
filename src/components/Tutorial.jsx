@@ -525,6 +525,29 @@ const Tutorial = ({ onStart }) => {
         <span className="section-line" />
       </div>
 
+      {/* 结印手势指南 */}
+      <div className={`seal-guide ${cardsVisible ? 'visible' : ''}`}>
+        <div className="seal-guide-title">{lang === 'zh' ? '🖐️ 结印手势指南' : '🖐️ Seal Gesture Guide'}</div>
+        <div className="seal-grid">
+          {[
+            { seal: '子', emoji: '👊', gesture: lang === 'zh' ? '握拳' : 'Fist', key: 'fist' },
+            { seal: '丑', emoji: '🖐️', gesture: lang === 'zh' ? '张掌' : 'Open Palm', key: 'palm' },
+            { seal: '寅', emoji: '✌️', gesture: lang === 'zh' ? 'V字' : 'V-Sign', key: 'v' },
+            { seal: '卯', emoji: '👍', gesture: lang === 'zh' ? '竖拇指' : 'Thumb Up', key: 'thumb' },
+            { seal: '辰', emoji: '🤘', gesture: lang === 'zh' ? '摇滚' : 'Rock', key: 'rock' },
+            { seal: '巳', emoji: '🤏', gesture: lang === 'zh' ? '捏合' : 'Pinch', key: 'pinch' },
+            { seal: '午', emoji: '🖐️↓', gesture: lang === 'zh' ? '掌朝下' : 'Palm Down', key: 'down' },
+            { seal: '未', emoji: '☝️', gesture: lang === 'zh' ? '食指' : 'Index', key: 'index' },
+          ].map(s => (
+            <div key={s.key} className="seal-item">
+              <span className="seal-emoji">{s.emoji}</span>
+              <span className="seal-char">{s.seal}</span>
+              <span className="seal-name">{s.gesture}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Jutsu Grid */}
       <div className={`jutsu-grid ${cardsVisible ? 'visible' : ''}`}>
         {jutsuData.map((jutsu, i) => (

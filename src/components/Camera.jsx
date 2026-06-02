@@ -199,14 +199,14 @@ export default function CameraComponent({ onBack }){
   // ========== 结印系统 ==========
 
   const SEAL_NAMES = {
-    '子': { seal: '子', gesture: '握拳' },
-    '丑': { seal: '丑', gesture: '张掌' },
-    '寅': { seal: '寅', gesture: 'V字' },
-    '卯': { seal: '卯', gesture: '竖拇指' },
-    '辰': { seal: '辰', gesture: '摇滚' },
-    '巳': { seal: '巳', gesture: '捏合' },
-    '午': { seal: '午', gesture: '掌朝下' },
-    '未': { seal: '未', gesture: '食指' },
+    '子': { seal: '子', gesture: '握拳',   emoji: '👊' },
+    '丑': { seal: '丑', gesture: '张掌',   emoji: '🖐️' },
+    '寅': { seal: '寅', gesture: 'V字',    emoji: '✌️' },
+    '卯': { seal: '卯', gesture: '竖拇指', emoji: '👍' },
+    '辰': { seal: '辰', gesture: '摇滚',   emoji: '🤘' },
+    '巳': { seal: '巳', gesture: '捏合',   emoji: '🤏' },
+    '午': { seal: '午', gesture: '掌朝下', emoji: '🖐️↓' },
+    '未': { seal: '未', gesture: '食指',   emoji: '☝️' },
   };
 
   function detectSeal(pts){
@@ -917,13 +917,17 @@ export default function CameraComponent({ onBack }){
         const y1 = fxCanvas.height - 90;
         comboDisplay.current.forEach((item, i) => {
           const x = fxCanvas.width / 2 + (i - comboDisplay.current.length / 2 + 0.5) * 100;
+          // Emoji 手势图标
+          fxCtx.font = '22px sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.9)';
+          fxCtx.fillText(item.emoji, x, y1 - 20);
           // 地支名
-          fxCtx.font = 'bold 28px "Bebas Neue", sans-serif';
+          fxCtx.font = 'bold 24px "Bebas Neue", sans-serif';
           fxCtx.fillStyle = 'rgba(198,40,40,0.9)';
-          fxCtx.fillText(item.seal, x, y1);
+          fxCtx.fillText(item.seal, x, y1 + 2);
           // 手势名
-          fxCtx.font = '13px "Rajdhani", sans-serif';
-          fxCtx.fillStyle = 'rgba(255,255,255,0.6)';
+          fxCtx.font = '12px "Rajdhani", sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.5)';
           fxCtx.fillText(item.gesture, x, y1 + 18);
         });
 
