@@ -196,14 +196,6 @@ export default function CameraComponent({ onBack }){
            isFingerDown(pts, 20, 18, 17);
   }
 
-  function checkIndex(pts){
-    // 只有食指伸直
-    return fingerClearlyUp(pts, 8, 6, 5) &&
-           !fingerClearlyUp(pts, 12, 10, 9) &&
-           !fingerClearlyUp(pts, 16, 14, 13) &&
-           !fingerClearlyUp(pts, 20, 18, 17);
-  }
-
   // ========== 结印系统 ==========
 
   // 手势→结印名映射（带防抖）
@@ -1123,7 +1115,7 @@ export default function CameraComponent({ onBack }){
           fireballPower.current[idx] = Math.max(0, Math.min(1, fireballPower.current[idx]));
           if(tiger && !wasTiger.current[idx]){
             fireball.currentTime = 0;
-            fireball.play();
+            fireball.play().catch(() => {});
           }
           wasTiger.current[idx] = tiger;
 
@@ -1152,6 +1144,16 @@ export default function CameraComponent({ onBack }){
       if(!pinchDetected){
         hollowPurpleSize.current = Math.max(0, hollowPurpleSize.current - 4);
         wasPinching.current = false;
+      }
+
+      // 手离开画面后，所有 power 值衰减
+      for(let i = 0; i < 2; i++){
+        power.current[i] = Math.max(0, power.current[i] - 0.02);
+        fireballPower.current[i] = Math.max(0, fireballPower.current[i] - 0.02);
+        sharinganPower.current[i] = Math.max(0, sharinganPower.current[i] - 0.02);
+        shadowClonePower.current[i] = Math.max(0, shadowClonePower.current[i] - 0.02);
+        eightGatesPower.current[i] = Math.max(0, eightGatesPower.current[i] - 0.02);
+        chibakuPower.current[i] = Math.max(0, chibakuPower.current[i] - 0.02);
       }
 
       if(!anyRock){

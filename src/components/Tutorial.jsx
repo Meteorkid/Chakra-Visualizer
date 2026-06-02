@@ -531,7 +531,7 @@ const Tutorial = ({ onStart }) => {
           <button
             key={jutsu.id}
             className="jutsu-card"
-            onClick={() => setSelectedJutsu(jutsu)}
+            onClick={() => setSelectedJutsu(jutsu.id)}
             style={{ '--c': jutsu.color, '--glow': jutsu.glow, animationDelay: `${i * 0.08}s` }}
           >
             <div className="card-anime-tag">{jutsu.anime}</div>
@@ -569,28 +569,31 @@ const Tutorial = ({ onStart }) => {
       </div>
 
       {/* Modal */}
-      {selectedJutsu && (
+      {selectedJutsu && (() => {
+        const sj = jutsuData.find(j => j.id === selectedJutsu);
+        if(!sj) return null;
+        return (
         <div className="modal-backdrop" onClick={() => setSelectedJutsu(null)}>
           <div
             className="modal"
-            style={{ '--c': selectedJutsu.color, '--glow': selectedJutsu.glow }}
+            style={{ '--c': sj.color, '--glow': sj.glow }}
             onClick={e => e.stopPropagation()}
           >
             <button className="modal-close" onClick={() => setSelectedJutsu(null)}>✕</button>
 
             <div className="modal-top">
               <div className="modal-illustration">
-                <GestureIllustration jutsu={selectedJutsu} size={200} />
+                <GestureIllustration jutsu={sj} size={200} />
               </div>
               <div className="modal-info">
-                <div className="modal-anime">{selectedJutsu.anime}</div>
-                <div className="modal-kanji">{selectedJutsu.kanji}</div>
-                <h2 className="modal-name">{selectedJutsu.name}</h2>
-                <p className="modal-desc">{selectedJutsu.description}</p>
+                <div className="modal-anime">{sj.anime}</div>
+                <div className="modal-kanji">{sj.kanji}</div>
+                <h2 className="modal-name">{sj.name}</h2>
+                <p className="modal-desc">{sj.description}</p>
                 <div className="modal-tags">
-                  <span className="modal-tag">{selectedJutsu.gesture}</span>
+                  <span className="modal-tag">{sj.gesture}</span>
                   <span className="modal-tag">
-                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : selectedJutsu.hand === 'combo' ? t('comboHand') : t('rightHand')}
+                    {sj.hand === 'either' ? t('eitherHand') : sj.hand === 'left' ? t('leftHand') : sj.hand === 'combo' ? t('comboHand') : t('rightHand')}
                   </span>
                 </div>
               </div>
@@ -599,8 +602,8 @@ const Tutorial = ({ onStart }) => {
             <div className="modal-steps">
               <h4 className="steps-heading">{t('howToPerform')}</h4>
               <ol className="steps-list">
-                {selectedJutsu.instructions.map((step, idx) => (
-                  <li key={idx} style={{ '--step-color': selectedJutsu.color }}>
+                {sj.instructions.map((step, idx) => (
+                  <li key={idx} style={{ '--step-color': sj.color }}>
                     <span className="step-num">{String(idx + 1).padStart(2, '0')}</span>
                     <span>{step}</span>
                   </li>
@@ -610,20 +613,21 @@ const Tutorial = ({ onStart }) => {
 
             <div className="modal-tip">
               <span className="tip-icon">⚡</span>
-              {selectedJutsu.hand === 'either'
-                ? t('eitherHandTip')
-                : t('singleHandTip', { hand: selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand') })}
+              {sj.hand === 'either' ? t('eitherHandTip')
+                : sj.hand === 'combo' ? t('comboTip')
+                : t('singleHandTip', { hand: sj.hand === 'left' ? t('leftHand') : t('rightHand') })}
             </div>
 
             <button
               className="modal-launch-btn"
-              onClick={() => onStart(selectedJutsu.id)}
+              onClick={() => onStart(sj.id)}
             >
-              {t('practice')} {selectedJutsu.name}
+              {t('practice')} {sj.name}
             </button>
           </div>
         </div>
-      )}
+        );
+      })()}
 
       <footer className="footer">
         {t('footer')} &nbsp;·&nbsp;

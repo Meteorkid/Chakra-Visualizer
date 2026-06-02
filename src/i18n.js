@@ -23,7 +23,8 @@ export const en = {
   howToPerform: "HOW TO PERFORM",
   practice: "Practice",
   eitherHandTip: "You can use either hand for this technique — try both!",
-  singleHandTip: "Use your {hand} hand only for this jutsu.",
+  singleHandTip: "Use your {hand} only for this jutsu.",
+  comboTip: "Perform the seal combination in sequence to unleash this ultimate technique!",
 
   // Hand labels
   eitherHand: "Either Hand",
@@ -206,7 +207,8 @@ export const zh = {
   howToPerform: "如何施展",
   practice: "练习",
   eitherHandTip: "此忍术可使用任意手 — 试试双手同时！",
-  singleHandTip: "此忍术请使用{hand}手。",
+  singleHandTip: "此忍术请使用{hand}。",
+  comboTip: "按顺序完成结印组合，释放终极忍术！",
 
   // Hand labels
   eitherHand: "任意手",
