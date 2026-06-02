@@ -5,7 +5,7 @@
 
 .tutorial-root {
   min-height: 100vh;
-  background: #04060e;
+  background: linear-gradient(180deg, #04060e 0%, #0a0e1a 30%, #0d1225 60%, #06090f 100%);
   color: #e2e8f0;
   font-family: 'Rajdhani', sans-serif;
   position: relative;
@@ -13,20 +13,224 @@
   overflow-y: auto;
 }
 
-/* ─── Background grid ──────────────────────────────────────── */
+/* ─── 晓组织红云纹样背景 ──────────────────────────────────── */
 .tutorial-root::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
+  background-image: url('/assets/akatsuki-clouds.svg');
+  background-size: 300px 300px;
+  background-repeat: repeat;
+  opacity: 0.4;
   pointer-events: none;
   z-index: 0;
+  animation: drift-clouds 60s linear infinite;
+}
+@keyframes drift-clouds {
+  from { background-position: 0 0; }
+  to { background-position: 300px 300px; }
 }
 
-/* ─── Particles canvas ─────────────────────────────────────── */
+/* ─── 角色剪影背景 ───────────────────────────────────────── */
+.naruto-characters {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background-image: url('/assets/naruto-silhouettes.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ─── 角色图片背景层 ─────────────────────────────────────── */
+.character-images {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.character-img {
+  position: absolute;
+  object-fit: contain;
+  opacity: 0.07;
+  filter: grayscale(0.3);
+}
+.character-img.naruto-left {
+  left: -5%;
+  bottom: 0;
+  height: 75vh;
+  animation: float-char 15s ease-in-out infinite alternate;
+}
+.character-img.naruto-right {
+  right: -3%;
+  bottom: 0;
+  height: 70vh;
+  transform: scaleX(-1);
+  animation: float-char 18s ease-in-out infinite alternate-reverse;
+}
+.character-img.naruto-center {
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  height: 50vh;
+  opacity: 0.04;
+  animation: float-char 20s ease-in-out infinite alternate;
+}
+.character-img.naruto-float {
+  right: 10%;
+  top: 10%;
+  height: 35vh;
+  opacity: 0.05;
+  animation: float-char 12s ease-in-out infinite alternate-reverse;
+}
+@keyframes float-char {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-15px) scale(1.02); }
+}
+.character-img.naruto-right {
+  animation: float-char-r 18s ease-in-out infinite alternate-reverse;
+}
+@keyframes float-char-r {
+  0% { transform: scaleX(-1) translateY(0) scale(1); }
+  100% { transform: scaleX(-1) translateY(-15px) scale(1.02); }
+}
+
+/* ─── 装饰元素背景 ───────────────────────────────────────── */
+.naruto-deco {
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/naruto-deco.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+  animation: float-deco 20s ease-in-out infinite alternate;
+}
+@keyframes float-deco {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.02) translate(-10px, -5px); }
+}
+
+/* ─── 忍术元素背景 ───────────────────────────────────────── */
+.naruto-elements {
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/naruto-elements.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 0;
+  animation: float-elements 25s ease-in-out infinite alternate;
+}
+@keyframes float-elements {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.01) translate(5px, -8px); }
+}
+
+/* ─── 查克拉漩涡装饰 ─────────────────────────────────────── */
+.chakra-swirl {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+.chakra-swirl.swirl-1 {
+  top: 15%;
+  left: 8%;
+  width: 120px;
+  height: 120px;
+  background-image: url('/assets/chakra-swirl.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin-swirl 20s linear infinite;
+}
+.chakra-swirl.swirl-2 {
+  bottom: 20%;
+  right: 5%;
+  width: 100px;
+  height: 100px;
+  background-image: url('/assets/chakra-swirl.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin-swirl 25s linear infinite reverse;
+}
+.chakra-swirl.swirl-3 {
+  top: 60%;
+  left: 15%;
+  width: 80px;
+  height: 80px;
+  background-image: url('/assets/chakra-swirl.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin-swirl 18s linear infinite;
+  opacity: 0.3;
+}
+@keyframes spin-swirl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── 木叶标志角标 ───────────────────────────────────────── */
+.leaf-corner {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+.leaf-corner.top-left {
+  top: -20px;
+  left: -20px;
+  width: 150px;
+  height: 150px;
+  background-image: url('/assets/leaf-symbol.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin-leaf 40s linear infinite;
+}
+.leaf-corner.bottom-right {
+  bottom: -20px;
+  right: -20px;
+  width: 120px;
+  height: 120px;
+  background-image: url('/assets/leaf-symbol.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spin-leaf 50s linear infinite reverse;
+}
+@keyframes spin-leaf {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── 写轮眼旋转背景 ─────────────────────────────────────── */
+.sharingan-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 900px;
+  background-image: url('/assets/sharingan-bg.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none;
+  z-index: 0;
+  animation: spin-sharingan 30s linear infinite;
+  opacity: 0.5;
+}
+@keyframes spin-sharingan {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ─── 查克拉粒子 canvas ───────────────────────────────────── */
 .chakra-particles {
   position: fixed;
   inset: 0;
@@ -34,7 +238,7 @@
   z-index: 1;
 }
 
-/* ─── Scanlines ────────────────────────────────────────────── */
+/* ─── 扫描线 ──────────────────────────────────────────────── */
 .scanlines {
   position: fixed;
   inset: 0;
@@ -42,11 +246,23 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(0,0,0,0.08) 2px,
-    rgba(0,0,0,0.08) 4px
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 4px
   );
   pointer-events: none;
   z-index: 2;
+}
+
+/* ─── 顶部装饰线 ──────────────────────────────────────────── */
+.top-accent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #c62828 30%, #ff5252 50%, #c62828 70%, transparent);
+  z-index: 100;
+  opacity: 0.8;
 }
 
 /* ─── Hero ─────────────────────────────────────────────────── */
@@ -54,7 +270,7 @@
   position: relative;
   z-index: 10;
   text-align: center;
-  padding: 5rem 2rem 3rem;
+  padding: 6rem 2rem 3rem;
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease, transform 0.8s ease;
@@ -64,6 +280,19 @@
   transform: translateY(0);
 }
 
+.hero-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #c62828;
+  border: 1px solid rgba(198,40,40,0.3);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+  background: rgba(198,40,40,0.08);
+}
 
 .hero-title {
   position: relative;
@@ -75,19 +304,19 @@
   display: inline-block;
 }
 .hero-title-link:hover .hero-title-en {
-  filter: drop-shadow(0 0 50px rgba(56,189,248,0.5));
+  filter: drop-shadow(0 0 60px rgba(198,40,40,0.6));
 }
 .hero-title-en {
   display: block;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-size: clamp(3.5rem, 10vw, 7.5rem);
   line-height: 1;
-  letter-spacing: 0.06em;
-  background: linear-gradient(160deg, #f8fafc 0%, #94a3b8 100%);
+  letter-spacing: 0.08em;
+  background: linear-gradient(160deg, #f8fafc 0%, #c62828 50%, #ff5252 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0 0 40px rgba(56,189,248,0.2));
+  filter: drop-shadow(0 0 40px rgba(198,40,40,0.3));
   transition: filter 0.3s ease;
 }
 
@@ -95,19 +324,25 @@
   font-size: clamp(1rem, 2vw, 1.15rem);
   color: #64748b;
   line-height: 1.7;
-  max-width: 500px;
+  max-width: 520px;
   margin: 0 auto 2.5rem;
   font-weight: 500;
+}
+.hero-subtitle em {
+  color: #c62828;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .hero-stats {
   display: inline-flex;
   align-items: center;
   gap: 0;
-  border: 1px solid #1e293b;
+  border: 1px solid rgba(198,40,40,0.2);
   border-radius: 12px;
   overflow: hidden;
-  background: rgba(255,255,255,0.02);
+  background: rgba(198,40,40,0.04);
+  backdrop-filter: blur(8px);
 }
 .stat {
   padding: 1rem 2rem;
@@ -133,7 +368,7 @@
 .stat-divider {
   width: 1px;
   height: 40px;
-  background: #1e293b;
+  background: rgba(198,40,40,0.2);
 }
 
 /* ─── Section label ────────────────────────────────────────── */
@@ -149,7 +384,7 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.25em;
-  color: #334155;
+  color: #c62828;
   opacity: 0;
   transition: opacity 0.6s ease 0.3s;
 }
@@ -157,7 +392,7 @@
 .section-line {
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #1e293b 50%, transparent);
+  background: linear-gradient(90deg, transparent, rgba(198,40,40,0.3) 50%, transparent);
   max-width: 200px;
 }
 
@@ -166,10 +401,10 @@
   position: relative;
   z-index: 10;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.25rem;
   padding: 0 2rem;
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto;
   opacity: 0;
   transition: opacity 0.5s ease;
@@ -181,13 +416,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #080d18;
-  border: 1px solid #1a2236;
+  background: rgba(8,13,24,0.85);
+  border: 1px solid rgba(198,40,40,0.15);
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   text-align: left;
   color: #e2e8f0;
+  backdrop-filter: blur(12px);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   padding: 0;
   opacity: 0;
@@ -200,9 +436,9 @@
 .jutsu-grid.visible .jutsu-card { animation-play-state: running; }
 
 .jutsu-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-6px) scale(1.02);
   border-color: var(--c);
-  box-shadow: 0 0 30px var(--glow), 0 20px 40px rgba(0,0,0,0.4);
+  box-shadow: 0 0 40px var(--glow), 0 20px 40px rgba(0,0,0,0.5);
 }
 .jutsu-card:hover .card-glow-border {
   opacity: 1;
@@ -222,13 +458,13 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #475569;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid #1e293b;
+  color: #c62828;
+  background: rgba(198,40,40,0.1);
+  border: 1px solid rgba(198,40,40,0.25);
   padding: 3px 8px;
   border-radius: 100px;
 }
@@ -242,7 +478,7 @@
 }
 
 .gesture-svg {
-  filter: drop-shadow(0 0 12px var(--c, #38bdf8));
+  filter: drop-shadow(0 0 12px var(--c, #c62828));
   animation: float-svg 3.5s ease-in-out infinite;
 }
 @keyframes float-svg {
@@ -256,7 +492,7 @@
 .card-kanji {
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 0.8rem;
-  color: #334155;
+  color: #475569;
   letter-spacing: 0.1em;
   margin-bottom: 2px;
 }
@@ -275,28 +511,27 @@
   flex-wrap: wrap;
 }
 .card-gesture-tag {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #64748b;
+  color: #94a3b8;
   background: rgba(255,255,255,0.04);
-  border: 1px solid #1e293b;
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 3px 8px;
   border-radius: 6px;
 }
-
 
 .card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.25rem 1rem;
-  border-top: 1px solid #0f1729;
+  border-top: 1px solid rgba(198,40,40,0.1);
   margin-top: 0.5rem;
 }
 .card-hand {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #475569;
   letter-spacing: 0.05em;
@@ -304,7 +539,7 @@
 }
 .card-arrow {
   font-size: 1rem;
-  color: #1e293b;
+  color: rgba(198,40,40,0.2);
   transition: color 0.2s ease, transform 0.2s ease;
 }
 .jutsu-card:hover .card-arrow {
@@ -327,8 +562,8 @@
   display: inline-flex;
   align-items: center;
   gap: 1rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-  border: 1px solid #334155;
+  background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 50%, #1a0000 100%);
+  border: 1px solid rgba(198,40,40,0.4);
   border-radius: 14px;
   padding: 1.25rem 2.5rem;
   cursor: pointer;
@@ -342,20 +577,20 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(167,139,250,0.1) 100%);
+  background: linear-gradient(135deg, rgba(198,40,40,0.15) 0%, rgba(255,82,82,0.1) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 .launch-btn:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 0 30px rgba(56,189,248,0.2), 0 20px 40px rgba(0,0,0,0.3);
+  border-color: #c62828;
+  box-shadow: 0 0 40px rgba(198,40,40,0.3), 0 20px 40px rgba(0,0,0,0.4);
   transform: translateY(-3px);
 }
 .launch-btn:hover::before { opacity: 1; }
 
 .launch-icon {
   font-size: 1.5rem;
-  color: #38bdf8;
+  color: #c62828;
   animation: spin-slow 8s linear infinite;
 }
 @keyframes spin-slow {
@@ -374,7 +609,7 @@
 }
 .launch-sub {
   display: block;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: #64748b;
@@ -394,9 +629,9 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -418,7 +653,7 @@
   max-width: 680px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 60px var(--glow), 0 40px 80px rgba(0,0,0,0.6);
+  box-shadow: 0 0 80px var(--glow), 0 40px 80px rgba(0,0,0,0.7);
   animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes slideUp {
@@ -432,9 +667,9 @@
   right: 1rem;
   width: 36px;
   height: 36px;
-  border: 1px solid #1e293b;
-  background: rgba(255,255,255,0.04);
-  color: #64748b;
+  border: 1px solid rgba(198,40,40,0.2);
+  background: rgba(198,40,40,0.08);
+  color: #94a3b8;
   font-size: 1rem;
   border-radius: 50%;
   cursor: pointer;
@@ -446,9 +681,9 @@
   font-family: sans-serif;
 }
 .modal-close:hover {
-  background: rgba(255,255,255,0.08);
+  background: rgba(198,40,40,0.15);
   color: #e2e8f0;
-  border-color: #475569;
+  border-color: #c62828;
 }
 
 .modal-top {
@@ -456,15 +691,15 @@
   grid-template-columns: 220px 1fr;
   gap: 2rem;
   padding: 2.5rem;
-  border-bottom: 1px solid #0f172a;
+  border-bottom: 1px solid rgba(198,40,40,0.1);
 }
 
 .modal-illustration {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid #0f172a;
+  background: rgba(198,40,40,0.04);
+  border: 1px solid rgba(198,40,40,0.15);
   border-radius: 14px;
   padding: 1.5rem;
 }
@@ -472,16 +707,16 @@
 .modal-info { display: flex; flex-direction: column; gap: 0.5rem; }
 
 .modal-anime {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #475569;
+  color: #c62828;
 }
 .modal-kanji {
   font-family: 'Noto Sans JP', sans-serif;
   font-size: 1.2rem;
-  color: #334155;
+  color: #475569;
   letter-spacing: 0.1em;
 }
 .modal-name {
@@ -505,26 +740,26 @@
   margin-top: 0.25rem;
 }
 .modal-tag {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #64748b;
+  color: #94a3b8;
   background: rgba(255,255,255,0.04);
-  border: 1px solid #1e293b;
+  border: 1px solid rgba(255,255,255,0.08);
   padding: 4px 10px;
   border-radius: 8px;
 }
 
 .modal-steps {
   padding: 2rem 2.5rem;
-  border-bottom: 1px solid #0f172a;
+  border-bottom: 1px solid rgba(198,40,40,0.1);
 }
 .steps-heading {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  color: #475569;
+  color: #c62828;
   margin-bottom: 1rem;
 }
 .steps-list {
@@ -541,16 +776,16 @@
   font-size: 1rem;
   font-weight: 500;
   color: #cbd5e1;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid #0f172a;
-  border-left: 3px solid var(--step-color, #38bdf8);
+  background: rgba(198,40,40,0.04);
+  border: 1px solid rgba(198,40,40,0.1);
+  border-left: 3px solid var(--step-color, #c62828);
   border-radius: 0 10px 10px 0;
   padding: 0.75rem 1rem;
 }
 .step-num {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 1.1rem;
-  color: var(--step-color, #38bdf8);
+  color: var(--step-color, #c62828);
   letter-spacing: 0.05em;
   min-width: 28px;
 }
@@ -585,17 +820,34 @@
   color: #04060e;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 0 20px var(--glow);
+  box-shadow: 0 0 25px var(--glow);
 }
 .modal-launch-btn:hover {
-  filter: brightness(1.15);
-  box-shadow: 0 0 40px var(--glow);
+  filter: brightness(1.2);
+  box-shadow: 0 0 50px var(--glow);
   transform: translateY(-2px);
 }
 
+/* ─── Footer ───────────────────────────────────────────────── */
+.footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid rgba(198,40,40,0.1);
+  font-size: 0.75rem;
+  color: #334155;
+  letter-spacing: 0.05em;
+}
+.footer a {
+  color: #c62828;
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
+
 /* ─── Responsive ───────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .hero { padding: 3rem 1.25rem 2rem; }
+  .hero { padding: 4rem 1.25rem 2rem; }
   .hero-title-en { font-size: clamp(3rem, 15vw, 5rem); }
   .jutsu-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; padding: 0 1rem; }
   .card-body { padding: 0.5rem 0.9rem 0.25rem; }
@@ -609,6 +861,7 @@
   .modal-launch-btn { width: calc(100% - 3rem); margin: 1.25rem 1.5rem 2rem; }
   .hero-stats { flex-direction: column; gap: 0; }
   .stat-divider { width: 80px; height: 1px; }
+  .sharingan-bg { width: 500px; height: 500px; }
 }
 
 @media (max-width: 400px) {

@@ -73,6 +73,75 @@ const jutsuData = [
       'Curl middle, ring, and pinky fingers inward',
       'Maintain the pinch — purple void expands!'
     ],
+  },
+  {
+    id: 'sharingan',
+    name: 'Sharingan',
+    kanji: '写輪眼',
+    hand: 'either',
+    color: '#ef4444',
+    colorDark: '#dc2626',
+    glow: 'rgba(239,68,68,0.6)',
+    description: 'The Copy Wheel Eye — grants the ability to see chakra, predict movements, and copy jutsu.',
+    anime: 'Naruto',
+    gesture: 'Scissor / V-Sign',
+    instructions: [
+      'Extend your index and middle fingers (V-sign)',
+      'Curl your ring, pinky, and thumb fingers',
+      'Hold the scissor gesture steady',
+      'The Sharingan will activate — a red eye appears!'
+    ],
+  },
+  {
+    id: 'shadow-clone',
+    name: 'Shadow Clone',
+    kanji: '影分身',
+    hand: 'either',
+    color: '#818cf8',
+    colorDark: '#6366f1',
+    glow: 'rgba(129,140,248,0.6)',
+    description: 'Kage Bunshin — creates solid physical clones of the user.',
+    anime: 'Naruto',
+    gesture: 'Rock Sign',
+    instructions: [
+      'Extend index, middle, and pinky fingers',
+      'Curl your ring finger down',
+      'Hold the rock gesture — smoke will rise!'
+    ],
+  },
+  {
+    id: 'eight-gates',
+    name: 'Eight Gates',
+    kanji: '八門遁甲',
+    hand: 'either',
+    color: '#22d3ee',
+    colorDark: '#06b6d4',
+    glow: 'rgba(34,211,238,0.6)',
+    description: 'Opens the eight chakra gates in the body, granting immense power at great physical cost.',
+    anime: 'Naruto',
+    gesture: 'Fist',
+    instructions: [
+      'Make a tight fist with either hand',
+      'Curl all five fingers inward',
+      'Hold the fist — energy aura will explode!'
+    ],
+  },
+  {
+    id: 'chibaku-tensei',
+    name: 'Chibaku Tensei',
+    kanji: '地爆天星',
+    hand: 'either',
+    color: '#a855f7',
+    colorDark: '#9333ea',
+    glow: 'rgba(168,85,247,0.6)',
+    description: 'Planetary Devastation — creates a gravitational core that pulls all matter into a massive sphere.',
+    anime: 'Naruto',
+    gesture: 'Palm Down',
+    instructions: [
+      'Extend all five fingers',
+      'Point your palm downward (fingertips below wrist)',
+      'Hold steady — a dark sphere forms and debris rises!'
+    ],
   }
 ];
 
@@ -161,6 +230,137 @@ const GestureIllustration = ({ jutsu, size = 160 }) => {
     );
   }
 
+  // Scissor / V-Sign — Sharingan
+  if (jutsu.id === 'sharingan') {
+    return (
+      <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
+        <defs>
+          <radialGradient id="glow-sharingan" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={c} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="url(#glow-sharingan)" />
+        {/* Palm */}
+        <ellipse cx="100" cy="130" rx="30" ry="34" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Wrist */}
+        <path d="M 82 158 Q 82 168 100 170 Q 118 168 118 158" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Thumb — curled */}
+        <path d="M 70 120 Q 62 115 65 108 Q 68 100 72 105" fill="none" stroke={c} strokeWidth="2" strokeOpacity="0.5"/>
+        {/* Index — extended up */}
+        <path d="M 84 96 Q 82 65 82 40 Q 82 28 86 22" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Middle — extended up */}
+        <path d="M 100 90 Q 100 58 100 32 Q 100 20 104 14" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Ring — curled */}
+        <path d="M 114 96 Q 116 85 118 80 Q 120 76 118 82 Q 116 90 114 96" fill="none" stroke={c} strokeWidth="2" strokeOpacity="0.5"/>
+        {/* Pinky — curled */}
+        <path d="M 126 108 Q 130 100 130 96 Q 130 92 128 98 Q 126 104 126 108" fill="none" stroke={c} strokeWidth="2" strokeOpacity="0.5"/>
+        {/* Fingertip dots */}
+        <circle cx="86" cy="22" r="3.5" fill={c} />
+        <circle cx="104" cy="14" r="3.5" fill={c} />
+        <circle cx="100" cy="160" r="4" fill={c} />
+      </svg>
+    );
+  }
+
+  // Rock Sign — Shadow Clone
+  if (jutsu.id === 'shadow-clone') {
+    return (
+      <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
+        <defs>
+          <radialGradient id="glow-clone" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={c} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="url(#glow-clone)" />
+        {/* Palm */}
+        <ellipse cx="100" cy="130" rx="30" ry="34" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Wrist */}
+        <path d="M 82 158 Q 82 168 100 170 Q 118 168 118 158" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Thumb — curled */}
+        <path d="M 70 120 Q 62 115 65 108 Q 68 100 72 105" fill="none" stroke={c} strokeWidth="2" strokeOpacity="0.5"/>
+        {/* Index — extended */}
+        <path d="M 84 96 Q 82 65 82 40 Q 82 28 86 22" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Middle — extended */}
+        <path d="M 100 90 Q 100 58 100 32 Q 100 20 104 14" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Ring — curled */}
+        <path d="M 114 96 Q 116 85 118 80 Q 120 76 118 82 Q 116 90 114 96" fill="none" stroke={c} strokeWidth="2" strokeOpacity="0.5"/>
+        {/* Pinky — extended */}
+        <path d="M 126 108 Q 132 82 133 58 Q 133 46 130 40" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Fingertip dots */}
+        <circle cx="86" cy="22" r="3.5" fill={c} />
+        <circle cx="104" cy="14" r="3.5" fill={c} />
+        <circle cx="130" cy="40" r="3.5" fill={c} />
+        <circle cx="100" cy="160" r="4" fill={c} />
+      </svg>
+    );
+  }
+
+  // Fist — Eight Gates
+  if (jutsu.id === 'eight-gates') {
+    return (
+      <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
+        <defs>
+          <radialGradient id="glow-gates" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={c} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="url(#glow-gates)" />
+        {/* Knuckle row */}
+        <rect x="62" y="88" width="18" height="16" rx="5" fill="none" stroke={c} strokeWidth="2.5"/>
+        <rect x="82" y="84" width="18" height="20" rx="5" fill="none" stroke={c} strokeWidth="2.5"/>
+        <rect x="102" y="84" width="18" height="20" rx="5" fill="none" stroke={c} strokeWidth="2.5"/>
+        <rect x="122" y="88" width="16" height="16" rx="5" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Palm */}
+        <rect x="62" y="102" width="76" height="30" rx="8" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Wrist */}
+        <path d="M 72 132 L 72 155 Q 72 162 100 162 Q 128 162 128 155 L 128 132" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Thumb — curled over fingers */}
+        <path d="M 62 108 Q 50 104 48 96 Q 46 88 52 84 Q 58 80 62 88" fill="none" stroke={c} strokeWidth="2.5"/>
+        <circle cx="55" cy="84" r="3" fill={c}/>
+        <circle cx="100" cy="150" r="4" fill={c}/>
+      </svg>
+    );
+  }
+
+  // Palm Down — Chibaku Tensei
+  if (jutsu.id === 'chibaku-tensei') {
+    return (
+      <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
+        <defs>
+          <radialGradient id="glow-chibaku" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={c} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="url(#glow-chibaku)" />
+        {/* Palm — facing down */}
+        <ellipse cx="100" cy="90" rx="34" ry="28" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Wrist — above palm */}
+        <path d="M 80 68 Q 80 58 100 56 Q 120 58 120 68" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Thumb — spread */}
+        <path d="M 68 95 Q 50 100 42 112 Q 38 120 44 124" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Index — pointing down */}
+        <path d="M 84 116 Q 83 140 83 158 Q 83 168 87 172" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Middle — pointing down */}
+        <path d="M 98 116 Q 98 142 98 162 Q 98 172 102 176" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Ring — pointing down */}
+        <path d="M 112 116 Q 113 140 113 156 Q 113 166 111 170" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Pinky — pointing down */}
+        <path d="M 124 108 Q 128 130 128 146 Q 128 154 126 158" fill="none" stroke={c} strokeWidth="2.5"/>
+        {/* Fingertip dots */}
+        <circle cx="87" cy="172" r="3.5" fill={c} />
+        <circle cx="102" cy="176" r="3.5" fill={c} />
+        <circle cx="111" cy="170" r="3.5" fill={c} />
+        <circle cx="126" cy="158" r="3.5" fill={c} />
+        <circle cx="44" cy="124" r="3" fill={c} />
+        <circle cx="100" cy="60" r="4" fill={c} />
+      </svg>
+    );
+  }
+
   // Pinch — Hollow Purple
   return (
     <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
@@ -228,14 +428,15 @@ const ChakraParticles = () => {
     const W = canvas.width = window.innerWidth;
     const H = canvas.height = window.innerHeight;
 
-    const particles = Array.from({ length: 60 }, () => ({
+    const particles = Array.from({ length: 80 }, () => ({
       x: Math.random() * W,
       y: Math.random() * H,
-      r: 1 + Math.random() * 2,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: -0.2 - Math.random() * 0.5,
-      alpha: 0.1 + Math.random() * 0.5,
-      color: ['#38bdf8','#a78bfa','#fb923c','#c084fc'][Math.floor(Math.random()*4)]
+      r: 1 + Math.random() * 2.5,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.15 - Math.random() * 0.4,
+      alpha: 0.1 + Math.random() * 0.4,
+      // 火影色系：查克拉蓝 + 写轮眼红 + 晓红
+      color: ['#c62828','#ff5252','#1565c0','#42a5f5','#ef6c00','#c62828','#b71c1c','#0d47a1'][Math.floor(Math.random()*8)]
     }));
 
     let raf;
@@ -276,29 +477,50 @@ const Tutorial = ({ onStart }) => {
   return (
     <div className="tutorial-root">
       <ChakraParticles />
+      <div className="sharingan-bg" />
+      <div className="naruto-deco" />
+      <div className="naruto-elements" />
+      <div className="naruto-characters" />
+
+      {/* 角色图片 */}
+      <div className="character-images">
+        <img src="/assets/naruto-uzumaki.png" alt="" className="character-img naruto-left" />
+        <img src="/assets/naruto-action.png" alt="" className="character-img naruto-right" />
+        <img src="/assets/naruto-portrait.png" alt="" className="character-img naruto-center" />
+        <img src="/assets/naruto-sitting.png" alt="" className="character-img naruto-float" />
+      </div>
+
+      <div className="chakra-swirl swirl-1" />
+      <div className="chakra-swirl swirl-2" />
+      <div className="chakra-swirl swirl-3" />
+
+      <div className="leaf-corner top-left" />
+      <div className="leaf-corner bottom-right" />
+      <div className="top-accent" />
 
       {/* Scanline overlay */}
       <div className="scanlines" />
 
       {/* Hero Section */}
       <header className={`hero ${heroVisible ? 'visible' : ''}`}>
+        <div className="hero-badge">NINJA VISUALIZER</div>
         <h1 className="hero-title">
           <a
-            href="https://github.com/ubp-as/Naruto-Jutsu-Visualizer"
+            href="https://github.com/Meteorkid/Chakra-Visualizer"
             target="_blank"
             rel="noopener noreferrer"
             className="hero-title-link"
           >
-            <span className="hero-title-en">Jutsu-Visualizer</span>
+            <span className="hero-title-en">JUTSU</span>
           </a>
         </h1>
         <p className="hero-subtitle">
-          Use your hands to cast real-time jutsu effects.<br />
-          Point your webcam — your chakra awaits.
+          用双手施展实时忍术特效 — <em>8种忍术</em>，双手同时释放<br />
+          对准摄像头，你的查克拉在等待觉醒
         </p>
 
         <div className="hero-stats">
-          <div className="stat"><span className="stat-num">4</span><span className="stat-label">Jutsu</span></div>
+          <div className="stat"><span className="stat-num">8</span><span className="stat-label">Jutsu</span></div>
           <div className="stat-divider"/>
           <div className="stat"><span className="stat-num">2</span><span className="stat-label">Anime Series</span></div>
           <div className="stat-divider"/>
@@ -412,6 +634,12 @@ const Tutorial = ({ onStart }) => {
           </div>
         </div>
       )}
+
+      <footer className="footer">
+        Built with MediaPipe + Canvas 2D &nbsp;·&nbsp;
+        <a href="https://github.com/Meteorkid/Chakra-Visualizer" target="_blank" rel="noopener noreferrer">GitHub</a>
+        &nbsp;·&nbsp; Naruto &copy; Masashi Kishimoto
+      </footer>
     </div>
   );
 };
