@@ -29,150 +29,6 @@ const JUTSU_HANDS = {
   rasenshuriken: 'combo', susano: 'combo', amaterasu: 'combo', tsukuyomi: 'combo',
 };
 
-const jutsuData = [
-  {
-    id: 'rasengan',
-    name: 'Rasengan',
-    kanji: '螺旋丸',
-    hand: 'right',
-    color: '#38bdf8',
-    colorDark: '#0ea5e9',
-    glow: 'rgba(56,189,248,0.6)',
-    description: 'The Spiraling Sphere — a self-sustaining, concentrated spinning ball of chakra.',
-    anime: 'Naruto',
-    gesture: 'Open Palm',
-    instructions: [
-      'Extend your RIGHT hand toward the camera',
-      'Spread all five fingers wide open',
-      'Keep your palm fully flat and facing forward',
-      'Hold the pose steady — blue chakra will spiral!'
-    ],
-  },
-  {
-    id: 'chidori',
-    name: 'Chidori',
-    kanji: '千鳥',
-    hand: 'left',
-    color: '#a78bfa',
-    colorDark: '#7c3aed',
-    glow: 'rgba(167,139,250,0.6)',
-    description: 'One Thousand Birds — a lightning blade that pierces anything in its path.',
-    anime: 'Naruto',
-    gesture: 'Open Palm',
-    instructions: [
-      'Extend your LEFT hand toward the camera',
-      'Spread all five fingers wide open',
-      'Keep your palm fully flat and facing forward',
-      'Hold the pose — lightning will crackle!'
-    ],
-  },
-  {
-    id: 'fireball',
-    name: 'Fireball Jutsu',
-    kanji: '火遁',
-    hand: 'either',
-    color: '#fb923c',
-    colorDark: '#ea580c',
-    glow: 'rgba(251,146,60,0.6)',
-    description: 'Katon: Gōkakyū — a massive fireball that consumes everything in its wake.',
-    anime: 'Naruto',
-    gesture: 'Thumbs Up',
-    instructions: [
-      'Make a fist with either hand',
-      'Extend your thumb straight upward',
-      'Curl index, middle, ring, and pinky fingers',
-      'Hold firm — fire ignites!'
-    ],
-  },
-  {
-    id: 'hollow-purple',
-    name: 'Hollow Purple',
-    kanji: '虚式　紫',
-    hand: 'either',
-    color: '#c084fc',
-    colorDark: '#9333ea',
-    glow: 'rgba(192,132,252,0.6)',
-    description: 'Imaginary Technique — the fusion of Red and Blue, obliterating all matter.',
-    anime: 'Jujutsu Kaisen',
-    gesture: 'Pinch',
-    instructions: [
-      'Touch your thumb tip to your index finger tip',
-      'Form a small O-shape with those two fingers',
-      'Curl middle, ring, and pinky fingers inward',
-      'Maintain the pinch — purple void expands!'
-    ],
-  },
-  {
-    id: 'sharingan',
-    name: 'Sharingan',
-    kanji: '写輪眼',
-    hand: 'either',
-    color: '#ef4444',
-    colorDark: '#dc2626',
-    glow: 'rgba(239,68,68,0.6)',
-    description: 'The Copy Wheel Eye — grants the ability to see chakra, predict movements, and copy jutsu.',
-    anime: 'Naruto',
-    gesture: 'Scissor / V-Sign',
-    instructions: [
-      'Extend your index and middle fingers (V-sign)',
-      'Curl your ring, pinky, and thumb fingers',
-      'Hold the scissor gesture steady',
-      'The Sharingan will activate — a red eye appears!'
-    ],
-  },
-  {
-    id: 'shadow-clone',
-    name: 'Shadow Clone',
-    kanji: '影分身',
-    hand: 'either',
-    color: '#818cf8',
-    colorDark: '#6366f1',
-    glow: 'rgba(129,140,248,0.6)',
-    description: 'Kage Bunshin — creates solid physical clones of the user.',
-    anime: 'Naruto',
-    gesture: 'Rock Sign',
-    instructions: [
-      'Extend index, middle, and pinky fingers',
-      'Curl your ring finger down',
-      'Hold the rock gesture — smoke will rise!'
-    ],
-  },
-  {
-    id: 'eight-gates',
-    name: 'Eight Gates',
-    kanji: '八門遁甲',
-    hand: 'either',
-    color: '#22d3ee',
-    colorDark: '#06b6d4',
-    glow: 'rgba(34,211,238,0.6)',
-    description: 'Opens the eight chakra gates in the body, granting immense power at great physical cost.',
-    anime: 'Naruto',
-    gesture: 'Fist',
-    instructions: [
-      'Make a tight fist with either hand',
-      'Curl all five fingers inward',
-      'Hold the fist — energy aura will explode!'
-    ],
-  },
-  {
-    id: 'chibaku-tensei',
-    name: 'Chibaku Tensei',
-    kanji: '地爆天星',
-    hand: 'either',
-    color: '#a855f7',
-    colorDark: '#9333ea',
-    glow: 'rgba(168,85,247,0.6)',
-    description: 'Planetary Devastation — creates a gravitational core that pulls all matter into a massive sphere.',
-    anime: 'Naruto',
-    gesture: 'Palm Down',
-    instructions: [
-      'Extend all five fingers',
-      'Point your palm downward (fingertips below wrist)',
-      'Hold steady — a dark sphere forms and debris rises!'
-    ],
-  }
-];
-
 const GestureIllustration = ({ jutsu, size = 160 }) => {
   const c = jutsu.color;
   const s = size;
@@ -578,11 +434,11 @@ const Tutorial = ({ onStart }) => {
       <div className="naruto-characters" />
 
       {/* 角色图片 */}
-      <div className="character-images">
-        <img src="/assets/naruto-uzumaki.png" alt="" className="character-img naruto-left" />
-        <img src="/assets/naruto-action.png" alt="" className="character-img naruto-right" />
-        <img src="/assets/naruto-portrait.png" alt="" className="character-img naruto-center" />
-        <img src="/assets/naruto-sitting.png" alt="" className="character-img naruto-float" />
+      <div className="character-images" aria-hidden="true">
+        <img src="/assets/naruto-uzumaki.png" alt="Naruto Uzumaki" className="character-img naruto-left" />
+        <img src="/assets/naruto-action.png" alt="Naruto Action" className="character-img naruto-right" />
+        <img src="/assets/naruto-portrait.png" alt="Naruto Portrait" className="character-img naruto-center" />
+        <img src="/assets/naruto-sitting.png" alt="Naruto Sitting" className="character-img naruto-float" />
       </div>
 
       {/* 动态技能特效 */}
@@ -733,7 +589,7 @@ const Tutorial = ({ onStart }) => {
                 <div className="modal-tags">
                   <span className="modal-tag">{selectedJutsu.gesture}</span>
                   <span className="modal-tag">
-                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand')}
+                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : selectedJutsu.hand === 'combo' ? '🔮 COMBO' : t('rightHand')}
                   </span>
                 </div>
               </div>
@@ -769,9 +625,9 @@ const Tutorial = ({ onStart }) => {
       )}
 
       <footer className="footer">
-        Chakra-Visualizer &nbsp;·&nbsp;
-        <a href="https://github.com/Meteorkid/Chakra-Visualizer" target="_blank" rel="noopener noreferrer">GitHub</a>
-        &nbsp;·&nbsp; Naruto &copy; Masashi Kishimoto
+        {t('footer')} &nbsp;·&nbsp;
+        <a href="https://github.com/Meteorkid/Chakra-Visualizer" target="_blank" rel="noopener noreferrer">{t('github')}</a>
+        &nbsp;·&nbsp; {t('copyright')}
       </footer>
     </div>
   );

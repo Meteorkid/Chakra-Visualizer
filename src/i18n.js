@@ -134,47 +134,47 @@ export const en = {
       name: "Rasenshuriken",
       kanji: "風遁·螺旋手裏剣",
       description: "Wind Release: Rasenshuriken — Naruto's ultimate technique combining Rasengan with wind-nature chakra.",
-      gesture: "Combo: 子→丑→寅→卯",
+      gesture: "Combo: Fist→Palm→V→Thumb",
       instructions: [
-        "1. 握拳 (子)",
-        "2. 张开手掌 (丑)",
-        "3. V sign (寅)",
-        "4. 竖大拇指 (卯) — Wind Release!"
+        "1. Fist (子)",
+        "2. Open Palm (丑)",
+        "3. V-Sign (寅)",
+        "4. Thumbs Up (卯) — Wind Release!"
       ]
     },
     susano: {
       name: "Susanoo",
       kanji: "須佐能乎",
       description: "Susanoo — the ultimate defense, a colossal humanoid avatar made of chakra.",
-      gesture: "Combo: 子→未→巳→午",
+      gesture: "Combo: Fist→Index→Pinch→PalmDown",
       instructions: [
-        "1. 握拳 (子)",
-        "2. 食指伸直 (未)",
-        "3. 捏合 (巳)",
-        "4. 手掌朝下 (午) — Susanoo awakens!"
+        "1. Fist (子)",
+        "2. Index Finger (未)",
+        "3. Pinch (巳)",
+        "4. Palm Down (午) — Susanoo awakens!"
       ]
     },
     amaterasu: {
       name: "Amaterasu",
       kanji: "天照",
       description: "Amaterasu — black flames that burn anything in existence, inextinguishable.",
-      gesture: "Combo: 子→丑→午→未",
+      gesture: "Combo: Fist→Palm→PalmDown→Index",
       instructions: [
-        "1. 握拳 (子)",
-        "2. 张开手掌 (丑)",
-        "3. 手掌朝下 (午)",
-        "4. 食指伸直 (未) — Amaterasu!"
+        "1. Fist (子)",
+        "2. Open Palm (丑)",
+        "3. Palm Down (午)",
+        "4. Index Finger (未) — Amaterasu!"
       ]
     },
     tsukuyomi: {
       name: "Tsukuyomi",
       kanji: "月読",
       description: "Tsukuyomi — a genjutsu that traps the victim in an illusory world controlled by the caster.",
-      gesture: "Combo: 子→午→未",
+      gesture: "Combo: Fist→PalmDown→Index",
       instructions: [
-        "1. 握拳 (子)",
-        "2. 手掌朝下 (午)",
-        "3. 食指伸直 (未) — Tsukuyomi!"
+        "1. Fist (子)",
+        "2. Palm Down (午)",
+        "3. Index Finger (未) — Tsukuyomi!"
       ]
     }
   }
@@ -258,7 +258,7 @@ export const zh = {
     "hollow-purple": {
       name: "虚式「紫」",
       kanji: "虚式　紫",
-      description: " imaginary 假象之术 — 红与蓝的融合，消灭一切物质。",
+      description: "假象之术 — 红与蓝的融合，消灭一切物质。",
       gesture: "捏合",
       instructions: [
         "拇指指尖和食指指尖相触",

@@ -45,6 +45,9 @@ export default function CameraComponent({ onBack }){
   const chibakuSphereSize = useRef(0);
   const chibakuPos = useRef({ x: 0, y: 0 });
 
+  // ========== 粒子限制 ==========
+  const PARTICLE_LIMIT = 500;
+
   // ========== 结印系统 refs ==========
   const comboBuffer = useRef([]);        // 结印缓冲区
   const comboTimer = useRef(null);       // 超时计时器
@@ -147,12 +150,12 @@ export default function CameraComponent({ onBack }){
   // 手势→结印名映射
   function detectSeal(pts){
     if(checkFist(pts))     return '子';
+    if(checkPalmDown(pts)) return '午';
     if(checkOpen(pts))     return '丑';
     if(checkScissor(pts))  return '寅';
     if(checkTiger(pts))    return '卯';
     if(checkRock(pts))     return '辰';
     if(checkPinch(pts))    return '巳';
-    if(checkPalmDown(pts)) return '午';
     if(checkIndex(pts))    return '未';
     return null;
   }
@@ -206,6 +209,7 @@ export default function CameraComponent({ onBack }){
   // ========== 粒子生成函数 ==========
 
   function spawnParticles(x, y, size){
+    if(particles.current.length >= PARTICLE_LIMIT) return;
     for(let i = 0; i < 8; i++){
       const angle = Math.random() * Math.PI * 2;
       const speed = 1 + Math.random() * 3;
@@ -223,6 +227,7 @@ export default function CameraComponent({ onBack }){
   }
 
   function spawnSharinganParticles(x, y, size){
+    if(particles.current.length >= PARTICLE_LIMIT) return;
     for(let i = 0; i < 3; i++){
       const angle = Math.random() * Math.PI * 2;
       const dist = size * 0.5 + Math.random() * size * 0.3;
@@ -240,6 +245,7 @@ export default function CameraComponent({ onBack }){
   }
 
   function spawnSmokeParticles(x, y){
+    if(particles.current.length >= PARTICLE_LIMIT) return;
     for(let i = 0; i < 5; i++){
       particles.current.push({
         x: x + (Math.random() - 0.5) * 60,
@@ -255,6 +261,7 @@ export default function CameraComponent({ onBack }){
   }
 
   function spawnAuraParticles(x, y, power){
+    if(particles.current.length >= PARTICLE_LIMIT) return;
     const count = Math.floor(6 + power * 8);
     for(let i = 0; i < count; i++){
       const angle = Math.random() * Math.PI * 2;
@@ -272,6 +279,7 @@ export default function CameraComponent({ onBack }){
   }
 
   function spawnDebrisParticles(x, y, size){
+    if(particles.current.length >= PARTICLE_LIMIT) return;
     for(let i = 0; i < 3; i++){
       const angle = Math.random() * Math.PI * 2;
       const dist = 250 + Math.random() * 250;
@@ -746,8 +754,12 @@ export default function CameraComponent({ onBack }){
     function animateEffects(){
       animFrameRef.current = requestAnimationFrame(animateEffects);
 
-      fxCanvas.width = window.innerWidth;
-      fxCanvas.height = window.innerHeight;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      if(fxCanvas.width !== w || fxCanvas.height !== h){
+        fxCanvas.width = w;
+        fxCanvas.height = h;
+      }
       fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
 
       // 写轮眼
@@ -792,7 +804,7 @@ export default function CameraComponent({ onBack }){
 
       // ========== 大招渲染 ==========
       const now = Date.now();
-      if(ultCooldown.current > now) ultCooldown.current = 0;
+      if(ultCooldown.current < now) ultCooldown.current = 0;
       if(ultTimer.current > now){
         const ult = ultActive.current;
         const ux = ultPos.current.x;
@@ -903,7 +915,7 @@ export default function CameraComponent({ onBack }){
             p.vy *= 0.98;
             fxCtx.beginPath();
             fxCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-            fxCtx.fillStyle = `${p.color}${p.life})`;
+            fxCtx.fillStyle = `${p.color}${Math.max(0, Math.min(1, p.life))})`;
             fxCtx.fill();
           }
         }
@@ -1089,6 +1101,11 @@ export default function CameraComponent({ onBack }){
 
     return () => {
       if(animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      cam.stop();
+      hands.close();
+      if(video.srcObject){
+        video.srcObject.getTracks().forEach(t => t.stop());
+      }
     };
 
   },[]);
