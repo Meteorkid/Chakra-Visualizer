@@ -913,31 +913,79 @@ export default function CameraComponent({ onBack }){
         fxCtx.save();
         fxCtx.textAlign = 'center';
 
-        // 显示已结的印（地支 + 手势）
-        const y1 = fxCanvas.height - 90;
+        const bufLen = comboDisplay.current.length;
+
+        // 计算最短目标序列长度（用于进度显示）
+        let targetLen = 4;
+        for(const seq of Object.values(ULT_SEQUENCES)){
+          if(seq.length < targetLen) targetLen = seq.length;
+        }
+        // 如果当前印数匹配某个序列的前缀，用该序列长度
+        for(const seq of Object.values(ULT_SEQUENCES)){
+          if(bufLen <= seq.length){
+            targetLen = seq.length;
+            break;
+          }
+        }
+
+        // 进度条背景
+        const barW = Math.min(bufLen, targetLen) * 100;
+        const barX = fxCanvas.width / 2 - barW / 2;
+        const barY = fxCanvas.height - 120;
+        fxCtx.fillStyle = 'rgba(255,255,255,0.06)';
+        fxCtx.beginPath();
+        fxCtx.roundRect(barX - 20, barY - 8, barW + 40, 90, 12);
+        fxCtx.fill();
+
+        // 进度指示 "2/4"
+        fxCtx.font = 'bold 14px "Bebas Neue", sans-serif';
+        fxCtx.fillStyle = 'rgba(198,40,40,0.6)';
+        fxCtx.fillText(`${bufLen} / ${targetLen}`, fxCanvas.width / 2, barY - 12);
+
+        // 显示已结的印（emoji + 地支 + 手势）
+        const y1 = fxCanvas.height - 80;
         comboDisplay.current.forEach((item, i) => {
-          const x = fxCanvas.width / 2 + (i - comboDisplay.current.length / 2 + 0.5) * 100;
-          // Emoji 手势图标
-          fxCtx.font = '22px sans-serif';
+          const x = fxCanvas.width / 2 + (i - bufLen / 2 + 0.5) * 100;
+          // Emoji
+          fxCtx.font = '20px sans-serif';
           fxCtx.fillStyle = 'rgba(255,255,255,0.9)';
-          fxCtx.fillText(item.emoji, x, y1 - 20);
-          // 地支名
-          fxCtx.font = 'bold 24px "Bebas Neue", sans-serif';
+          fxCtx.fillText(item.emoji, x, y1 - 18);
+          // 地支
+          fxCtx.font = 'bold 22px "Bebas Neue", sans-serif';
           fxCtx.fillStyle = 'rgba(198,40,40,0.9)';
           fxCtx.fillText(item.seal, x, y1 + 2);
           // 手势名
-          fxCtx.font = '12px "Rajdhani", sans-serif';
+          fxCtx.font = '11px "Rajdhani", sans-serif';
           fxCtx.fillStyle = 'rgba(255,255,255,0.5)';
-          fxCtx.fillText(item.gesture, x, y1 + 18);
+          fxCtx.fillText(item.gesture, x, y1 + 16);
+          // 已完成的绿点
+          fxCtx.beginPath();
+          fxCtx.arc(x, y1 + 26, 3, 0, Math.PI * 2);
+          fxCtx.fillStyle = 'rgba(34,197,94,0.8)';
+          fxCtx.fill();
         });
 
+        // 待完成的空位
+        for(let i = bufLen; i < targetLen; i++){
+          const x = fxCanvas.width / 2 + (i - bufLen / 2 + 0.5) * 100;
+          fxCtx.beginPath();
+          fxCtx.arc(x, y1 - 6, 12, 0, Math.PI * 2);
+          fxCtx.strokeStyle = 'rgba(255,255,255,0.15)';
+          fxCtx.lineWidth = 1.5;
+          fxCtx.stroke();
+          // 空位里的问号
+          fxCtx.font = '12px "Rajdhani", sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.2)';
+          fxCtx.fillText('?', x, y1 - 2);
+        }
+
         // 箭头连接
-        if(comboDisplay.current.length > 1){
-          fxCtx.font = '18px sans-serif';
-          fxCtx.fillStyle = 'rgba(255,255,255,0.3)';
-          for(let i = 0; i < comboDisplay.current.length - 1; i++){
-            const x = fxCanvas.width / 2 + (i - comboDisplay.current.length / 2 + 1) * 100;
-            fxCtx.fillText('→', x, y1 - 5);
+        if(bufLen > 1){
+          fxCtx.font = '16px sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.25)';
+          for(let i = 0; i < bufLen - 1; i++){
+            const x = fxCanvas.width / 2 + (i - bufLen / 2 + 1) * 100;
+            fxCtx.fillText('→', x, y1 - 4);
           }
         }
 
