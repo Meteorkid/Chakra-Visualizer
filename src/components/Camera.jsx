@@ -198,9 +198,18 @@ export default function CameraComponent({ onBack }){
 
   // ========== 结印系统 ==========
 
-  // 手势→结印名映射（带防抖）
+  const SEAL_NAMES = {
+    '子': { seal: '子', gesture: '握拳' },
+    '丑': { seal: '丑', gesture: '张掌' },
+    '寅': { seal: '寅', gesture: 'V字' },
+    '卯': { seal: '卯', gesture: '竖拇指' },
+    '辰': { seal: '辰', gesture: '摇滚' },
+    '巳': { seal: '巳', gesture: '捏合' },
+    '午': { seal: '午', gesture: '掌朝下' },
+    '未': { seal: '未', gesture: '食指' },
+  };
+
   function detectSeal(pts){
-    // 检测当前帧的原始手势
     let raw = null;
     if(checkFist(pts))     raw = '子';
     else if(checkPalmDown(pts)) raw = '午';
@@ -211,27 +220,22 @@ export default function CameraComponent({ onBack }){
     else if(checkPinch(pts))    raw = '巳';
     else if(checkIndex(pts))    raw = '未';
 
-    // 防抖：记录历史
     gestureHistory.current.push(raw);
     if(gestureHistory.current.length > GESTURE_FRAMES){
       gestureHistory.current.shift();
     }
 
-    // 稳定性判断：最近 N 帧相同才确认
     if(gestureHistory.current.length >= GESTURE_FRAMES){
       const allSame = gestureHistory.current.every(g => g === raw);
       if(allSame && raw !== null){
-        // 手势稳定，检查是否与上一个确认的手势不同（去重）
         if(raw !== stableGesture.current){
           stableGesture.current = raw;
-          return raw;
+          return SEAL_NAMES[raw];
         }
-        // 相同手势连续出现，不重复推入
         return null;
       }
     }
 
-    // 手势不稳定或变化中，清空稳定状态
     if(raw === null) stableGesture.current = null;
     return null;
   }
@@ -248,7 +252,7 @@ export default function CameraComponent({ onBack }){
   function checkComboMatch(buffer){
     for(const [ultName, seq] of Object.entries(ULT_SEQUENCES)){
       const bufSlice = buffer.slice(-seq.length);
-      if(bufSlice.length === seq.length && bufSlice.every((s,i) => s === seq[i])){
+      if(bufSlice.length === seq.length && bufSlice.every((s,i) => s.seal === seq[i])){
         return ultName;
       }
     }
@@ -256,29 +260,26 @@ export default function CameraComponent({ onBack }){
   }
 
   // 推入结印并检查匹配
-  function pushSeal(seal){
+  function pushSeal(sealObj){
     const now = Date.now();
-    // 3秒超时清空
     if(now - lastGestureTime.current > 3000){
       comboBuffer.current = [];
       comboDisplay.current = [];
     }
     lastGestureTime.current = now;
 
-    // 去重：连续相同手势不重复推入
-    if(comboBuffer.current.length > 0 && comboBuffer.current[comboBuffer.current.length-1] === seal){
+    // 去重：连续相同地支不重复推入
+    if(comboBuffer.current.length > 0 && comboBuffer.current[comboBuffer.current.length-1].seal === sealObj.seal){
       return null;
     }
 
-    comboBuffer.current.push(seal);
+    comboBuffer.current.push(sealObj);
     comboDisplay.current = [...comboBuffer.current];
 
-    // 限制缓冲区长度
     if(comboBuffer.current.length > 6){
       comboBuffer.current.shift();
     }
 
-    // 检查匹配
     return checkComboMatch(comboBuffer.current);
   }
 
@@ -909,15 +910,36 @@ export default function CameraComponent({ onBack }){
 
       // ========== 结印显示 ==========
       if(comboDisplay.current.length > 0){
-        const displayText = comboDisplay.current.join(' → ');
         fxCtx.save();
-        fxCtx.font = 'bold 24px "Bebas Neue", sans-serif';
         fxCtx.textAlign = 'center';
-        fxCtx.fillStyle = `rgba(198,40,40,${0.8})`;
-        fxCtx.fillText('结印: ' + displayText, fxCanvas.width / 2, fxCanvas.height - 80);
-        // 提示下一个
-        fxCtx.font = '16px "Rajdhani", sans-serif';
-        fxCtx.fillStyle = 'rgba(255,255,255,0.4)';
+
+        // 显示已结的印（地支 + 手势）
+        const y1 = fxCanvas.height - 90;
+        comboDisplay.current.forEach((item, i) => {
+          const x = fxCanvas.width / 2 + (i - comboDisplay.current.length / 2 + 0.5) * 100;
+          // 地支名
+          fxCtx.font = 'bold 28px "Bebas Neue", sans-serif';
+          fxCtx.fillStyle = 'rgba(198,40,40,0.9)';
+          fxCtx.fillText(item.seal, x, y1);
+          // 手势名
+          fxCtx.font = '13px "Rajdhani", sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.6)';
+          fxCtx.fillText(item.gesture, x, y1 + 18);
+        });
+
+        // 箭头连接
+        if(comboDisplay.current.length > 1){
+          fxCtx.font = '18px sans-serif';
+          fxCtx.fillStyle = 'rgba(255,255,255,0.3)';
+          for(let i = 0; i < comboDisplay.current.length - 1; i++){
+            const x = fxCanvas.width / 2 + (i - comboDisplay.current.length / 2 + 1) * 100;
+            fxCtx.fillText('→', x, y1 - 5);
+          }
+        }
+
+        // 提示
+        fxCtx.font = '14px "Rajdhani", sans-serif';
+        fxCtx.fillStyle = 'rgba(255,255,255,0.35)';
         fxCtx.fillText('继续结印释放大招...', fxCanvas.width / 2, fxCanvas.height - 55);
         fxCtx.restore();
       }
