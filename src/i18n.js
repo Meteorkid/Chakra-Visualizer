@@ -182,6 +182,96 @@ export const en = {
         "2. Palm Down (午)",
         "3. Index Finger (未) — Tsukuyomi!"
       ]
+    },
+    "rasengan-big": {
+      name: "Super Great Ball Rasengan",
+      kanji: "仙法·超大玉螺旋丸",
+      description: "Sage Art: Super Great Ball Rasengan — an amplified version of the Rasengan infused with natural energy.",
+      gesture: "Combo: Palm→Pinch",
+      instructions: [
+        "1. Open Palm (丑)",
+        "2. Pinch (巳) — Sage Art!"
+      ]
+    },
+    "bijuu-dama": {
+      name: "Tailed Beast Ball",
+      kanji: "尾獣玉",
+      description: "Tailed Beast Ball — the ultimate destructive attack of the Nine-Tails.",
+      gesture: "Combo: Fist (hold 3s)",
+      instructions: [
+        "1. Make a tight fist (子)",
+        "2. Hold for 3 seconds — Tailed Beast!"
+      ]
+    },
+    kirin: {
+      name: "Kirin",
+      kanji: "麒麟",
+      description: "Lightning Release: Kirin — summons a lightning dragon from the heavens.",
+      gesture: "Combo: V→Index",
+      instructions: [
+        "1. V-Sign (寅)",
+        "2. Index Finger (未) — Kirin!"
+      ]
+    },
+    totsuka: {
+      name: "Totsuka Blade",
+      kanji: "八坂瓊勾玉",
+      description: "Yata Mirror & Totsuka Blade — the ultimate offensive and defensive weapons of Susanoo.",
+      gesture: "Combo: Pinch→Thumb",
+      instructions: [
+        "1. Pinch (巳)",
+        "2. Thumbs Up (卯) — Totsuka!"
+      ]
+    },
+    byakugou: {
+      name: "Byakugou Seal",
+      kanji: "百豪の術",
+      description: "Creation Rebirth — unlocks the full power of the Hundred Healings Seal.",
+      gesture: "Combo: Palm→PalmUp",
+      instructions: [
+        "1. Open Palm (丑)",
+        "2. Palm Up (丑 reversed) — Byakugou!"
+      ]
+    },
+    "sakura-impact": {
+      name: "Cherry Blossom Impact",
+      kanji: "桜花衝",
+      description: "A devastating punch that shatters the ground with cherry blossom petals.",
+      gesture: "Combo: Fist→V",
+      instructions: [
+        "1. Fist (子)",
+        "2. V-Sign (寅) — Cherry Blossom!"
+      ]
+    },
+    "sand-coffin": {
+      name: "Sand Coffin",
+      kanji: "砂縛柩",
+      description: "Sand Burial — traps the enemy in a coffin of compressed sand.",
+      gesture: "Combo: PalmDown→Fist",
+      instructions: [
+        "1. Palm Down (午)",
+        "2. Fist (子) — Sand Coffin!"
+      ]
+    },
+    "sand-shield": {
+      name: "Shukaku Shield",
+      kanji: "守鶴の盾",
+      description: "A massive sand defense wall shaped like the One-Tail.",
+      gesture: "Combo: Palm→Palm",
+      instructions: [
+        "1. Open Palm (丑)",
+        "2. Open Palm again (丑) — Shukaku Shield!"
+      ]
+    },
+    shinra: {
+      name: "Shinra Tensei",
+      kanji: "神羅天征",
+      description: "Almighty Push — repels everything in a massive shockwave.",
+      gesture: "Combo: PalmDown→PalmDown",
+      instructions: [
+        "1. Palm Down (午)",
+        "2. Palm Down again (午) — Shinra Tensei!"
+      ]
     }
   }
 };
@@ -369,6 +459,96 @@ export const zh = {
         "1. 握拳 (子)",
         "2. 手掌朝下 (午)",
         "3. 食指伸直 (未) — 月读发动！"
+      ]
+    },
+    "rasengan-big": {
+      name: "仙法·超大玉螺旋丸",
+      kanji: "仙法·超大玉螺旋丸",
+      description: "仙法·超大玉螺旋丸 — 螺旋丸的强化版，注入自然能量。",
+      gesture: "结印: 张掌→捏合",
+      instructions: [
+        "1. 张开手掌 (丑)",
+        "2. 捏合 (巳) — 仙法发动！"
+      ]
+    },
+    "bijuu-dama": {
+      name: "尾兽玉",
+      kanji: "尾獣玉",
+      description: "尾兽玉 — 九尾的终极破坏攻击。",
+      gesture: "结印: 握拳（长按3秒）",
+      instructions: [
+        "1. 用力握拳 (子)",
+        "2. 保持3秒 — 尾兽之力！"
+      ]
+    },
+    kirin: {
+      name: "雷遁·麒麟",
+      kanji: "麒麟",
+      description: "雷遁·麒麟 — 召唤天降雷电之龙。",
+      gesture: "结印: V字→食指",
+      instructions: [
+        "1. V字手势 (寅)",
+        "2. 食指伸直 (未) — 麒麟降临！"
+      ]
+    },
+    totsuka: {
+      name: "十拳剑",
+      kanji: "八坂瓊勾玉",
+      description: "八坂瓊勾玉 — 须佐能乎的终极攻防武器。",
+      gesture: "结印: 捏合→竖拇指",
+      instructions: [
+        "1. 捏合 (巳)",
+        "2. 竖大拇指 (卯) — 十拳剑！"
+      ]
+    },
+    byakugou: {
+      name: "百豪之术",
+      kanji: "百豪の術",
+      description: "创造再生 — 解锁百豪之印的全部力量。",
+      gesture: "结印: 张掌→掌朝上",
+      instructions: [
+        "1. 张开手掌 (丑)",
+        "2. 掌心朝上 (丑反转) — 百豪发动！"
+      ]
+    },
+    "sakura-impact": {
+      name: "樱花冲",
+      kanji: "桜花衝",
+      description: "樱花冲 — 一拳碎裂地面，樱花飞散。",
+      gesture: "结印: 握拳→V字",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. V字手势 (寅) — 樱花绽放！"
+      ]
+    },
+    "sand-coffin": {
+      name: "砂缚柩",
+      kanji: "砂縛柩",
+      description: "砂缚柩 — 用砂形成的棺材困住敌人。",
+      gesture: "结印: 掌朝下→握拳",
+      instructions: [
+        "1. 手掌朝下 (午)",
+        "2. 握拳 (子) — 砂棺封印！"
+      ]
+    },
+    "sand-shield": {
+      name: "守鹤之盾",
+      kanji: "守鶴の盾",
+      description: "守鹤之盾 — 一尾守护的巨大砂防御壁。",
+      gesture: "结印: 张掌→张掌",
+      instructions: [
+        "1. 张开手掌 (丑)",
+        "2. 再次张开手掌 (丑) — 守鹤显现！"
+      ]
+    },
+    shinra: {
+      name: "神罗天征",
+      kanji: "神羅天征",
+      description: "神罗天征 — 全方位排斥一切的冲击波。",
+      gesture: "结印: 掌朝下→掌朝下",
+      instructions: [
+        "1. 手掌朝下 (午)",
+        "2. 再次手掌朝下 (午) — 万象天引！"
       ]
     }
   }

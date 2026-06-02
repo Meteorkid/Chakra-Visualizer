@@ -242,12 +242,21 @@ export default function CameraComponent({ onBack }){
     return null;
   }
 
-  // 大招结印序列定义
+  // 大招结印序列定义（确保无重复）
   const ULT_SEQUENCES = {
-    'rasenshuriken': ['子','丑','寅','卯'],
-    'susano':      ['子','未','巳','午'],
-    'amaterasu':     ['子','丑','午','未'],
-    'tsukuyomi':     ['子','午','未'],
+    'rasenshuriken': ['子','丑','寅','卯'],  // 4印
+    'susano':        ['子','未','巳','午'],  // 4印
+    'amaterasu':     ['子','丑','午','未'],  // 4印
+    'tsukuyomi':     ['子','午','未'],        // 3印
+    'rasengan-big':  ['丑','巳'],            // 2印
+    'bijuu-dama':    ['卯','卯'],            // 2印（竖拇指×2）
+    'kirin':         ['寅','未'],            // 2印
+    'totsuka':       ['巳','卯'],            // 2印
+    'byakugou':      ['丑','辰'],            // 2印
+    'sakura-impact': ['子','寅'],            // 2印
+    'sand-coffin':   ['午','子'],            // 2印
+    'sand-shield':   ['丑','未'],            // 2印
+    'shinra':        ['午','未'],            // 2印
   };
 
   // 检查缓冲区是否匹配任何大招序列

@@ -3,7 +3,11 @@ import { useLanguage } from '../LanguageContext';
 import { useGame } from '../GameContext';
 import './Tutorial.css';
 
-const JUTSU_IDS = ['rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei','rasenshuriken','susano','amaterasu','tsukuyomi'];
+const JUTSU_IDS = [
+  'rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei',
+  'rasenshuriken','susano','amaterasu','tsukuyomi',
+  'rasengan-big','bijuu-dama','kirin','totsuka','byakugou','sakura-impact','sand-coffin','sand-shield','shinra'
+];
 const JUTSU_COLORS = {
   rasengan: { color: '#38bdf8', colorDark: '#0ea5e9', glow: 'rgba(56,189,248,0.6)' },
   chidori: { color: '#a78bfa', colorDark: '#7c3aed', glow: 'rgba(167,139,250,0.6)' },
@@ -17,18 +21,44 @@ const JUTSU_COLORS = {
   susano: { color: '#7c3aed', colorDark: '#6d28d9', glow: 'rgba(124,58,237,0.6)' },
   amaterasu: { color: '#1e1e1e', colorDark: '#000000', glow: 'rgba(80,0,120,0.6)' },
   tsukuyomi: { color: '#dc2626', colorDark: '#991b1b', glow: 'rgba(220,38,38,0.6)' },
+  'rasengan-big': { color: '#0284c7', colorDark: '#075985', glow: 'rgba(2,132,199,0.6)' },
+  'bijuu-dama': { color: '#f97316', colorDark: '#c2410c', glow: 'rgba(249,115,22,0.6)' },
+  kirin: { color: '#a855f7', colorDark: '#7e22ce', glow: 'rgba(168,85,247,0.6)' },
+  totsuka: { color: '#fbbf24', colorDark: '#d97706', glow: 'rgba(251,191,36,0.6)' },
+  byakugou: { color: '#f472b6', colorDark: '#db2777', glow: 'rgba(244,114,182,0.6)' },
+  'sakura-impact': { color: '#ec4899', colorDark: '#be185d', glow: 'rgba(236,72,153,0.6)' },
+  'sand-coffin': { color: '#d97706', colorDark: '#92400e', glow: 'rgba(217,119,6,0.6)' },
+  'sand-shield': { color: '#eab308', colorDark: '#a16207', glow: 'rgba(234,179,8,0.6)' },
+  shinra: { color: '#6366f1', colorDark: '#4338ca', glow: 'rgba(99,102,241,0.6)' },
 };
 const JUTSU_ANIME = {
   rasengan: 'Naruto', chidori: 'Naruto', fireball: 'Naruto',
   'hollow-purple': 'Jujutsu Kaisen', sharingan: 'Naruto',
   'shadow-clone': 'Naruto', 'eight-gates': 'Naruto', 'chibaku-tensei': 'Naruto',
   rasenshuriken: 'Naruto', susano: 'Naruto', amaterasu: 'Naruto', tsukuyomi: 'Naruto',
+  'rasengan-big': 'Naruto', 'bijuu-dama': 'Naruto', kirin: 'Naruto', totsuka: 'Naruto',
+  byakugou: 'Naruto', 'sakura-impact': 'Naruto', 'sand-coffin': 'Naruto',
+  'sand-shield': 'Naruto', shinra: 'Naruto',
 };
 const JUTSU_HANDS = {
   rasengan: 'right', chidori: 'left', fireball: 'either', 'hollow-purple': 'either',
   sharingan: 'either', 'shadow-clone': 'either', 'eight-gates': 'either', 'chibaku-tensei': 'either',
   rasenshuriken: 'combo', susano: 'combo', amaterasu: 'combo', tsukuyomi: 'combo',
+  'rasengan-big': 'combo', 'bijuu-dama': 'combo', kirin: 'combo', totsuka: 'combo',
+  byakugou: 'combo', 'sakura-impact': 'combo', 'sand-coffin': 'combo',
+  'sand-shield': 'combo', shinra: 'combo',
 };
+
+// 角色分组
+const CHARACTERS = [
+  { id: 'naruto', name: { en: 'Naruto', zh: '鸣人' }, emoji: '🍥', ids: ['rasengan','shadow-clone','rasenshuriken','rasengan-big','bijuu-dama'] },
+  { id: 'sasuke', name: { en: 'Sasuke', zh: '佐助' }, emoji: '⚡', ids: ['chidori','sharingan','susano','amaterasu','kirin'] },
+  { id: 'itachi', name: { en: 'Itachi', zh: '鼬' }, emoji: '🌀', ids: ['tsukuyomi','totsuka'] },
+  { id: 'sakura', name: { en: 'Sakura', zh: '小樱' }, emoji: '🌸', ids: ['byakugou','sakura-impact'] },
+  { id: 'gaara', name: { en: 'Gaara', zh: '我爱罗' }, emoji: '🏜️', ids: ['sand-coffin','sand-shield'] },
+  { id: 'pain', name: { en: 'Pain', zh: '佩恩' }, emoji: '🔴', ids: ['chibaku-tensei','shinra'] },
+  { id: 'other', name: { en: 'Others', zh: '其他' }, emoji: '🌀', ids: ['fireball','hollow-purple','eight-gates'] },
+];
 
 const GestureIllustration = ({ jutsu, size = 160 }) => {
   const c = jutsu.color;
@@ -247,7 +277,7 @@ const GestureIllustration = ({ jutsu, size = 160 }) => {
   }
 
   // Combo Jutsu — 结印序列图标
-  if (jutsu.id === 'rasenshuriken' || jutsu.id === 'susano' || jutsu.id === 'amaterasu' || jutsu.id === 'tsukuyomi') {
+  if (jutsu.hand === 'combo') {
     return (
       <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
         <defs>
@@ -561,34 +591,46 @@ const Tutorial = ({ onStart }) => {
         </div>
       </div>
 
-      {/* Jutsu Grid */}
-      <div className={`jutsu-grid ${cardsVisible ? 'visible' : ''}`}>
-        {jutsuData.map((jutsu, i) => (
-          <button
-            key={jutsu.id}
-            className="jutsu-card"
-            onClick={() => setSelectedJutsu(jutsu.id)}
-            style={{ '--c': jutsu.color, '--glow': jutsu.glow, animationDelay: `${i * 0.08}s` }}
-          >
-            <div className="card-anime-tag">{jutsu.anime}</div>
-            <div className="card-illustration">
-              <GestureIllustration jutsu={jutsu} size={110} />
+      {/* 按角色分组显示技能 */}
+      {CHARACTERS.map((char) => {
+        const charJutsu = jutsuData.filter(j => char.ids.includes(j.id));
+        if(charJutsu.length === 0) return null;
+        return (
+          <div key={char.id} className={`character-section ${cardsVisible ? 'visible' : ''}`}>
+            <div className="character-header">
+              <span className="character-emoji">{char.emoji}</span>
+              <span className="character-name">{char.name[lang]}</span>
             </div>
-            <div className="card-body">
-              <div className="card-kanji">{jutsu.kanji}</div>
-              <h3 className="card-name">{jutsu.name}</h3>
-              <div className="card-meta">
-                <span className="card-gesture-tag">{jutsu.gesture}</span>
-              </div>
+            <div className="jutsu-grid">
+              {charJutsu.map((jutsu, i) => (
+                <button
+                  key={jutsu.id}
+                  className="jutsu-card"
+                  onClick={() => setSelectedJutsu(jutsu.id)}
+                  style={{ '--c': jutsu.color, '--glow': jutsu.glow, animationDelay: `${i * 0.08}s` }}
+                >
+                  <div className="card-anime-tag">{jutsu.anime}</div>
+                  <div className="card-illustration">
+                    <GestureIllustration jutsu={jutsu} size={110} />
+                  </div>
+                  <div className="card-body">
+                    <div className="card-kanji">{jutsu.kanji}</div>
+                    <h3 className="card-name">{jutsu.name}</h3>
+                    <div className="card-meta">
+                      <span className="card-gesture-tag">{jutsu.gesture}</span>
+                    </div>
+                  </div>
+                  <div className="card-footer">
+                    <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : jutsu.hand === 'combo' ? t('comboHand') : t('rightHand')}</span>
+                    <span className="card-arrow">→</span>
+                  </div>
+                  <div className="card-glow-border" />
+                </button>
+              ))}
             </div>
-            <div className="card-footer">
-              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : jutsu.hand === 'combo' ? t('comboHand') : t('rightHand')}</span>
-              <span className="card-arrow">→</span>
-            </div>
-            <div className="card-glow-border" />
-          </button>
-        ))}
-      </div>
+          </div>
+        );
+      })}
 
       {/* CTA */}
       <div className={`cta-section ${cardsVisible ? 'visible' : ''}`}>
