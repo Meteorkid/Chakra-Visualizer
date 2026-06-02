@@ -45,6 +45,11 @@ export default function CameraComponent({ onBack }){
   const chibakuSphereSize = useRef(0);
   const chibakuPos = useRef({ x: 0, y: 0 });
 
+  // ========== 手势防抖 ==========
+  const gestureHistory = useRef([]);     // 最近 N 帧的手势记录
+  const stableGesture = useRef(null);    // 稳定后的手势
+  const GESTURE_FRAMES = 3;              // 连续 N 帧相同才确认
+
   // ========== 粒子限制 ==========
   const PARTICLE_LIMIT = 500;
 
@@ -58,83 +63,137 @@ export default function CameraComponent({ onBack }){
   const ultTimer = useRef(0);           // 大招持续时间
   const ultPos = useRef({ x: 0, y: 0 }); // 大招位置
 
-  // ========== 手势检测函数 ==========
+  // ========== 手势检测系统（v2 优化版）==========
 
-  function fingerExtended(pts, tipIdx, pipIdx){
+  // 统一手指伸直评分：综合 y 坐标 + 距离两个信号，返回 0-1 分数
+  // 1 = 完全伸直，0 = 完全弯曲
+  function fingerScore(pts, tipIdx, pipIdx, mcpIdx){
+    const tip = pts[tipIdx];
+    const pip = pts[pipIdx];
+    const mcp = pts[mcpIdx];
     const wrist = pts[0];
-    return Math.hypot(pts[tipIdx].x - wrist.x, pts[tipIdx].y - wrist.y) >
-           Math.hypot(pts[pipIdx].x - wrist.x, pts[pipIdx].y - wrist.y);
+
+    // 信号1: y 坐标比较（tip 比 pip/mcp 高 = 伸直）
+    const yScore = (tip.y < pip.y ? 0.5 : 0) + (tip.y < mcp.y ? 0.5 : 0);
+
+    // 信号2: 距离比较（tip 离手腕比 pip 远 = 伸直）
+    const tipDist = Math.hypot(tip.x - wrist.x, tip.y - wrist.y);
+    const pipDist = Math.hypot(pip.x - wrist.x, pip.y - wrist.y);
+    const dScore = tipDist > pipDist * 1.05 ? 0.5 : tipDist > pipDist ? 0.25 : 0;
+
+    // 信号3: 手指角度（tip 在 mcp-pip 延长线上 = 伸直）
+    const angle = Math.atan2(tip.y - mcp.y, tip.x - mcp.x);
+    const pipAngle = Math.atan2(pip.y - mcp.y, pip.x - mcp.x);
+    const angleDiff = Math.abs(angle - pipAngle);
+    const aScore = angleDiff < 0.5 ? 0.5 : angleDiff < 1.0 ? 0.25 : 0;
+
+    return Math.min(1, yScore + dScore + aScore);
   }
 
-  // 更严格的伸直检测：基于 y 坐标，减少误判
-  function fingerClearlyUp(pts, tipIdx, pipIdx, mcpIdx){
-    return pts[tipIdx].y < pts[pipIdx].y && pts[tipIdx].y < pts[mcpIdx].y;
+  // 判断手指是否伸直（阈值 0.6）
+  function isFingerUp(pts, tipIdx, pipIdx, mcpIdx){
+    return fingerScore(pts, tipIdx, pipIdx, mcpIdx) >= 0.6;
+  }
+
+  // 判断手指是否弯曲（阈值 0.35）
+  function isFingerDown(pts, tipIdx, pipIdx, mcpIdx){
+    return fingerScore(pts, tipIdx, pipIdx, mcpIdx) < 0.35;
+  }
+
+  // 手掌方向检测：返回 'front' | 'down' | 'side'
+  function palmDirection(pts){
+    const wrist = pts[0];
+    const mcp9 = pts[9]; // 中指根部
+    // 手掌朝前：中指根部在手腕上方
+    // 手掌朝下：中指根部在手腕下方
+    const dy = mcp9.y - wrist.y;
+    const dx = mcp9.x - wrist.x;
+    if(dy > 0.08) return 'down';
+    if(Math.abs(dx) > 0.15) return 'side';
+    return 'front';
+  }
+
+  // 拇指伸直检测（特殊处理，拇指运动方向不同）
+  function isThumbUp(pts){
+    const thumbTip = pts[4];
+    const thumbIp = pts[3];
+    const thumbMcp = pts[2];
+    // 拇指向上：tip.y < mcp.y 且有一定距离
+    return thumbTip.y < thumbMcp.y - 0.04 &&
+           Math.hypot(thumbTip.x - thumbMcp.x, thumbTip.y - thumbMcp.y) > 0.03;
+  }
+
+  function isThumbClosed(pts){
+    const thumbTip = pts[4];
+    const indexMcp = pts[5];
+    // 拇指弯曲：tip 靠近食指根部
+    return Math.hypot(thumbTip.x - indexMcp.x, thumbTip.y - indexMcp.y) < 0.08;
+  }
+
+  // ========== 手势判定函数 ==========
+
+  function checkFist(pts){
+    return isFingerDown(pts, 8, 6, 5) &&
+           isFingerDown(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerDown(pts, 20, 18, 17) &&
+           isThumbClosed(pts);
   }
 
   function checkOpen(pts){
-    let count = 0;
-    if(fingerClearlyUp(pts, 8, 6, 5)) count++;
-    if(fingerClearlyUp(pts, 12, 10, 9)) count++;
-    if(fingerClearlyUp(pts, 16, 14, 13)) count++;
-    if(fingerClearlyUp(pts, 20, 18, 17)) count++;
-    return count >= 3;
+    // 四指全部伸直 + 拇指不握拳
+    return isFingerUp(pts, 8, 6, 5) &&
+           isFingerUp(pts, 12, 10, 9) &&
+           isFingerUp(pts, 16, 14, 13) &&
+           isFingerUp(pts, 20, 18, 17);
+  }
+
+  function checkScissor(pts){
+    return isFingerUp(pts, 8, 6, 5) &&
+           isFingerUp(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerDown(pts, 20, 18, 17);
+  }
+
+  function checkRock(pts){
+    return isFingerUp(pts, 8, 6, 5) &&
+           isFingerUp(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerUp(pts, 20, 18, 17);
   }
 
   function checkTiger(pts){
-    const wrist = pts[0];
-    const thumbTip = pts[4];
-    const thumbMcp = pts[2];
-    const thumbUp = thumbTip.y < thumbMcp.y - 0.05;
-    const indexClosed = !fingerExtended(pts, 8, 6);
-    const middleClosed = !fingerExtended(pts, 12, 10);
-    const ringClosed = !fingerExtended(pts, 16, 14);
-    const pinkyClosed = !fingerExtended(pts, 20, 18);
-    return thumbUp && indexClosed && middleClosed && ringClosed && pinkyClosed;
+    return isThumbUp(pts) &&
+           isFingerDown(pts, 8, 6, 5) &&
+           isFingerDown(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerDown(pts, 20, 18, 17);
   }
 
   function checkPinch(pts){
     const thumbTip = pts[4];
     const indexTip = pts[8];
     const dist = Math.hypot(thumbTip.x - indexTip.x, thumbTip.y - indexTip.y);
-    const middleClosed = !fingerExtended(pts, 12, 10);
-    const ringClosed = !fingerExtended(pts, 16, 14);
-    const pinkyClosed = !fingerExtended(pts, 20, 18);
-    return dist < 0.05 && middleClosed && ringClosed && pinkyClosed;
-  }
-
-  function checkFist(pts){
-    if(fingerClearlyUp(pts, 8, 6, 5)) return false;
-    if(fingerClearlyUp(pts, 12, 10, 9)) return false;
-    if(fingerClearlyUp(pts, 16, 14, 13)) return false;
-    if(fingerClearlyUp(pts, 20, 18, 17)) return false;
-    return true;
-  }
-
-  function checkScissor(pts){
-    // 食指+中指明确伸直，无名指+小指明确弯曲
-    return fingerClearlyUp(pts, 8, 6, 5) &&
-           fingerClearlyUp(pts, 12, 10, 9) &&
-           !fingerClearlyUp(pts, 16, 14, 13) &&
-           !fingerClearlyUp(pts, 20, 18, 17);
-  }
-
-  function checkRock(pts){
-    // 食指+中指+小指伸直，无名指弯曲
-    return fingerClearlyUp(pts, 8, 6, 5) &&
-           fingerClearlyUp(pts, 12, 10, 9) &&
-           !fingerClearlyUp(pts, 16, 14, 13) &&
-           fingerClearlyUp(pts, 20, 18, 17);
+    return dist < 0.06 &&
+           isFingerDown(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerDown(pts, 20, 18, 17);
   }
 
   function checkPalmDown(pts){
-    // 所有手指伸直 + 手掌朝下
-    if(!fingerClearlyUp(pts, 8, 6, 5)) return false;
-    if(!fingerClearlyUp(pts, 12, 10, 9)) return false;
-    if(!fingerClearlyUp(pts, 16, 14, 13)) return false;
-    if(!fingerClearlyUp(pts, 20, 18, 17)) return false;
-    // 手掌朝下：指尖 y 坐标大于手腕
-    const avgTipY = (pts[8].y + pts[12].y + pts[16].y + pts[20].y) / 4;
-    return avgTipY > pts[0].y + 0.04;
+    // 四指伸直 + 手掌朝下方向
+    return isFingerUp(pts, 8, 6, 5) &&
+           isFingerUp(pts, 12, 10, 9) &&
+           isFingerUp(pts, 16, 14, 13) &&
+           isFingerUp(pts, 20, 18, 17) &&
+           palmDirection(pts) === 'down';
+  }
+
+  function checkIndex(pts){
+    return isFingerUp(pts, 8, 6, 5) &&
+           isFingerDown(pts, 12, 10, 9) &&
+           isFingerDown(pts, 16, 14, 13) &&
+           isFingerDown(pts, 20, 18, 17);
   }
 
   function checkIndex(pts){
@@ -147,16 +206,41 @@ export default function CameraComponent({ onBack }){
 
   // ========== 结印系统 ==========
 
-  // 手势→结印名映射
+  // 手势→结印名映射（带防抖）
   function detectSeal(pts){
-    if(checkFist(pts))     return '子';
-    if(checkPalmDown(pts)) return '午';
-    if(checkOpen(pts))     return '丑';
-    if(checkScissor(pts))  return '寅';
-    if(checkTiger(pts))    return '卯';
-    if(checkRock(pts))     return '辰';
-    if(checkPinch(pts))    return '巳';
-    if(checkIndex(pts))    return '未';
+    // 检测当前帧的原始手势
+    let raw = null;
+    if(checkFist(pts))     raw = '子';
+    else if(checkPalmDown(pts)) raw = '午';
+    else if(checkOpen(pts))     raw = '丑';
+    else if(checkScissor(pts))  raw = '寅';
+    else if(checkTiger(pts))    raw = '卯';
+    else if(checkRock(pts))     raw = '辰';
+    else if(checkPinch(pts))    raw = '巳';
+    else if(checkIndex(pts))    raw = '未';
+
+    // 防抖：记录历史
+    gestureHistory.current.push(raw);
+    if(gestureHistory.current.length > GESTURE_FRAMES){
+      gestureHistory.current.shift();
+    }
+
+    // 稳定性判断：最近 N 帧相同才确认
+    if(gestureHistory.current.length >= GESTURE_FRAMES){
+      const allSame = gestureHistory.current.every(g => g === raw);
+      if(allSame && raw !== null){
+        // 手势稳定，检查是否与上一个确认的手势不同（去重）
+        if(raw !== stableGesture.current){
+          stableGesture.current = raw;
+          return raw;
+        }
+        // 相同手势连续出现，不重复推入
+        return null;
+      }
+    }
+
+    // 手势不稳定或变化中，清空稳定状态
+    if(raw === null) stableGesture.current = null;
     return null;
   }
 
