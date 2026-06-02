@@ -413,10 +413,11 @@ const Tutorial = ({ onStart }) => {
     anime: JUTSU_ANIME[id],
     gesture: t(`jutsu.${id}.gesture`),
     hand: JUTSU_HANDS[id],
-    instructions: [0,1,2,3].filter(i => {
-      const inst = t(`jutsu.${id}.instructions.${i}`);
-      return typeof inst === 'string' && !inst.startsWith('jutsu.');
-    }).map(i => t(`jutsu.${id}.instructions.${i}`)),
+    instructions: (() => {
+      const instArr = t(`jutsu.${id}.instructions`);
+      if(!Array.isArray(instArr)) return [];
+      return instArr.filter(s => typeof s === 'string');
+    })(),
   }));
 
   useEffect(() => {
@@ -545,7 +546,7 @@ const Tutorial = ({ onStart }) => {
               </div>
             </div>
             <div className="card-footer">
-              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : jutsu.hand === 'combo' ? '🔮 COMBO' : t('rightHand')}</span>
+              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : jutsu.hand === 'combo' ? t('comboHand') : t('rightHand')}</span>
               <span className="card-arrow">→</span>
             </div>
             <div className="card-glow-border" />
@@ -589,7 +590,7 @@ const Tutorial = ({ onStart }) => {
                 <div className="modal-tags">
                   <span className="modal-tag">{selectedJutsu.gesture}</span>
                   <span className="modal-tag">
-                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : selectedJutsu.hand === 'combo' ? '🔮 COMBO' : t('rightHand')}
+                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : selectedJutsu.hand === 'combo' ? t('comboHand') : t('rightHand')}
                   </span>
                 </div>
               </div>
@@ -611,7 +612,7 @@ const Tutorial = ({ onStart }) => {
               <span className="tip-icon">⚡</span>
               {selectedJutsu.hand === 'either'
                 ? t('eitherHandTip')
-                : t('singleHandTip').replace('{hand}', selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand'))}
+                : t('singleHandTip', { hand: selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand') })}
             </div>
 
             <button

@@ -1003,7 +1003,7 @@ export default function CameraComponent({ onBack }){
           shadowClonePower.current[idx] += rock ? 0.05 : -0.15;
           shadowClonePower.current[idx] = Math.max(0, Math.min(1, shadowClonePower.current[idx]));
           wasRock.current[idx] = rock;
-          if(rock) cloneHandData.current = pts;
+          if(rock) cloneHandData.current = pts.map(p => ({x: p.x, y: p.y, z: p.z}));
 
           // 地爆天星
           chibakuPower.current[idx] += palmDown ? 0.05 : -0.15;
@@ -1022,7 +1022,7 @@ export default function CameraComponent({ onBack }){
           if(open && !wasOpen.current[idx]){
             const vid = isRight ? chidori : rasengan;
             vid.currentTime = 0;
-            vid.play();
+            vid.play().catch(() => {});
           }
           wasOpen.current[idx] = open;
 

@@ -29,6 +29,7 @@ export const en = {
   eitherHand: "Either Hand",
   leftHand: "Left Hand",
   rightHand: "Right Hand",
+  comboHand: "🔮 COMBO",
 
   // Footer
   footer: "Chakra-Visualizer",
@@ -211,6 +212,7 @@ export const zh = {
   eitherHand: "任意手",
   leftHand: "左手",
   rightHand: "右手",
+  comboHand: "🔮 结印组合",
 
   // Footer
   footer: "查克拉可视化器",
