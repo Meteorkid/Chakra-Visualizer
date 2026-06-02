@@ -1,5 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '../LanguageContext';
 import './Tutorial.css';
+
+const JUTSU_IDS = ['rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei'];
+const JUTSU_COLORS = {
+  rasengan: { color: '#38bdf8', colorDark: '#0ea5e9', glow: 'rgba(56,189,248,0.6)' },
+  chidori: { color: '#a78bfa', colorDark: '#7c3aed', glow: 'rgba(167,139,250,0.6)' },
+  fireball: { color: '#fb923c', colorDark: '#ea580c', glow: 'rgba(251,146,60,0.6)' },
+  'hollow-purple': { color: '#c084fc', colorDark: '#9333ea', glow: 'rgba(192,132,252,0.6)' },
+  sharingan: { color: '#ef4444', colorDark: '#dc2626', glow: 'rgba(239,68,68,0.6)' },
+  'shadow-clone': { color: '#818cf8', colorDark: '#6366f1', glow: 'rgba(129,140,248,0.6)' },
+  'eight-gates': { color: '#22d3ee', colorDark: '#06b6d4', glow: 'rgba(34,211,238,0.6)' },
+  'chibaku-tensei': { color: '#a855f7', colorDark: '#9333ea', glow: 'rgba(168,85,247,0.6)' },
+};
+const JUTSU_ANIME = {
+  rasengan: 'Naruto', chidori: 'Naruto', fireball: 'Naruto',
+  'hollow-purple': 'Jujutsu Kaisen', sharingan: 'Naruto',
+  'shadow-clone': 'Naruto', 'eight-gates': 'Naruto', 'chibaku-tensei': 'Naruto',
+};
+const JUTSU_HANDS = {
+  rasengan: 'right', chidori: 'left', fireball: 'either', 'hollow-purple': 'either',
+  sharingan: 'either', 'shadow-clone': 'either', 'eight-gates': 'either', 'chibaku-tensei': 'either',
+};
 
 const jutsuData = [
   {
@@ -464,9 +486,28 @@ const ChakraParticles = () => {
 
 
 const Tutorial = ({ onStart }) => {
+  const { lang, setLang, t } = useLanguage();
   const [selectedJutsu, setSelectedJutsu] = useState(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
+
+  // 动态生成 jutsuData
+  const jutsuData = JUTSU_IDS.map(id => ({
+    id,
+    name: t(`jutsu.${id}.name`),
+    kanji: t(`jutsu.${id}.kanji`),
+    color: JUTSU_COLORS[id].color,
+    colorDark: JUTSU_COLORS[id].colorDark,
+    glow: JUTSU_COLORS[id].glow,
+    description: t(`jutsu.${id}.description`),
+    anime: JUTSU_ANIME[id],
+    gesture: t(`jutsu.${id}.gesture`),
+    hand: JUTSU_HANDS[id],
+    instructions: [0,1,2,3].filter(i => {
+      const inst = t(`jutsu.${id}.instructions.${i}`);
+      return typeof inst === 'string' && !inst.startsWith('jutsu.');
+    }).map(i => t(`jutsu.${id}.instructions.${i}`)),
+  }));
 
   useEffect(() => {
     const t1 = setTimeout(() => setHeroVisible(true), 100);
@@ -534,9 +575,14 @@ const Tutorial = ({ onStart }) => {
       {/* Scanline overlay */}
       <div className="scanlines" />
 
+      {/* 语言切换按钮 */}
+      <button className="lang-btn" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}>
+        {lang === 'en' ? '中文' : 'EN'}
+      </button>
+
       {/* Hero Section */}
       <header className={`hero ${heroVisible ? 'visible' : ''}`}>
-        <div className="hero-badge">火影忍者互动体验</div>
+        <div className="hero-badge">{t('badge')}</div>
         <h1 className="hero-title">
           <a
             href="https://github.com/Meteorkid/Chakra-Visualizer"
@@ -548,23 +594,23 @@ const Tutorial = ({ onStart }) => {
           </a>
         </h1>
         <p className="hero-subtitle">
-          用双手施展实时忍术特效 — <em>8种忍术</em>，双手同时释放<br />
-          对准摄像头，你的查克拉在等待觉醒
+          {t('subtitle1')}<em>{t('subtitleEm')}</em>{t('subtitle2')}<br />
+          {t('subtitle3')}
         </p>
 
         <div className="hero-stats">
-          <div className="stat"><span className="stat-num">8</span><span className="stat-label">Jutsu</span></div>
+          <div className="stat"><span className="stat-num">8</span><span className="stat-label">{t('statJutsu')}</span></div>
           <div className="stat-divider"/>
-          <div className="stat"><span className="stat-num">2</span><span className="stat-label">Anime Series</span></div>
+          <div className="stat"><span className="stat-num">2</span><span className="stat-label">{t('statAnime')}</span></div>
           <div className="stat-divider"/>
-          <div className="stat"><span className="stat-num">60fps</span><span className="stat-label">Real-Time</span></div>
+          <div className="stat"><span className="stat-num">60fps</span><span className="stat-label">{t('statFps')}</span></div>
         </div>
       </header>
 
       {/* Section label */}
       <div className={`section-label ${cardsVisible ? 'visible' : ''}`}>
         <span className="section-line" />
-        <span>SELECT TECHNIQUE</span>
+        <span>{t('selectTechnique')}</span>
         <span className="section-line" />
       </div>
 
@@ -589,7 +635,7 @@ const Tutorial = ({ onStart }) => {
               </div>
             </div>
             <div className="card-footer">
-              <span className="card-hand">{jutsu.hand === 'either' ? 'Either Hand' : `${jutsu.hand.charAt(0).toUpperCase() + jutsu.hand.slice(1)} Hand`}</span>
+              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : t('rightHand')}</span>
               <span className="card-arrow">→</span>
             </div>
             <div className="card-glow-border" />
@@ -602,12 +648,12 @@ const Tutorial = ({ onStart }) => {
         <button className="launch-btn" onClick={() => onStart()}>
           <span className="launch-icon">⦿</span>
           <span className="launch-text">
-            <span className="launch-main">Activate Webcam</span>
-            <span className="launch-sub">All jutsu available simultaneously</span>
+            <span className="launch-main">{t('activateWebcam')}</span>
+            <span className="launch-sub">{t('allJutsu')}</span>
           </span>
         </button>
         <p className="cta-hint">
-          Click any jutsu above to learn the gesture first
+          {t('clickHint')}
         </p>
       </div>
 
@@ -633,14 +679,14 @@ const Tutorial = ({ onStart }) => {
                 <div className="modal-tags">
                   <span className="modal-tag">{selectedJutsu.gesture}</span>
                   <span className="modal-tag">
-                    {selectedJutsu.hand === 'either' ? 'Either Hand' : `${selectedJutsu.hand.charAt(0).toUpperCase() + selectedJutsu.hand.slice(1)} Hand`}
+                    {selectedJutsu.hand === 'either' ? t('eitherHand') : selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand')}
                   </span>
                 </div>
               </div>
             </div>
 
             <div className="modal-steps">
-              <h4 className="steps-heading">HOW TO PERFORM</h4>
+              <h4 className="steps-heading">{t('howToPerform')}</h4>
               <ol className="steps-list">
                 {selectedJutsu.instructions.map((step, idx) => (
                   <li key={idx} style={{ '--step-color': selectedJutsu.color }}>
@@ -654,15 +700,15 @@ const Tutorial = ({ onStart }) => {
             <div className="modal-tip">
               <span className="tip-icon">⚡</span>
               {selectedJutsu.hand === 'either'
-                ? 'You can use either hand for this technique — try both!'
-                : `Use your ${selectedJutsu.hand.toUpperCase()} hand only for this jutsu.`}
+                ? t('eitherHandTip')
+                : t('singleHandTip').replace('{hand}', selectedJutsu.hand === 'left' ? t('leftHand') : t('rightHand'))}
             </div>
 
             <button
               className="modal-launch-btn"
               onClick={() => onStart(selectedJutsu.id)}
             >
-              Practice {selectedJutsu.name}
+              {t('practice')} {selectedJutsu.name}
             </button>
           </div>
         </div>
