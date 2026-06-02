@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
+import { useGame } from "../GameContext";
 import { Hands } from "@mediapipe/hands";
 import { Camera } from "@mediapipe/camera_utils";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 
 export default function CameraComponent({ onBack }){
+  const { config } = useGame();
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -48,7 +50,7 @@ export default function CameraComponent({ onBack }){
   // ========== 手势防抖 ==========
   const gestureHistory = useRef([]);     // 最近 N 帧的手势记录
   const stableGesture = useRef(null);    // 稳定后的手势
-  const GESTURE_FRAMES = 3;              // 连续 N 帧相同才确认
+  // config.gestureFrames 从 config 读取
 
   // ========== 粒子限制 ==========
   const PARTICLE_LIMIT = 500;
@@ -92,7 +94,7 @@ export default function CameraComponent({ onBack }){
 
   // 判断手指是否伸直（阈值 0.6）
   function isFingerUp(pts, tipIdx, pipIdx, mcpIdx){
-    return fingerScore(pts, tipIdx, pipIdx, mcpIdx) >= 0.6;
+    return fingerScore(pts, tipIdx, pipIdx, mcpIdx) >= config.scoreThreshold;
   }
 
   // 判断手指是否弯曲（阈值 0.35）
@@ -221,11 +223,11 @@ export default function CameraComponent({ onBack }){
     else if(checkIndex(pts))    raw = '未';
 
     gestureHistory.current.push(raw);
-    if(gestureHistory.current.length > GESTURE_FRAMES){
+    if(gestureHistory.current.length > config.gestureFrames){
       gestureHistory.current.shift();
     }
 
-    if(gestureHistory.current.length >= GESTURE_FRAMES){
+    if(gestureHistory.current.length >= config.gestureFrames){
       const allSame = gestureHistory.current.every(g => g === raw);
       if(allSame && raw !== null){
         if(raw !== stableGesture.current){
@@ -262,7 +264,7 @@ export default function CameraComponent({ onBack }){
   // 推入结印并检查匹配
   function pushSeal(sealObj){
     const now = Date.now();
-    if(now - lastGestureTime.current > 3000){
+    if(now - lastGestureTime.current > config.sealTimeout){
       comboBuffer.current = [];
       comboDisplay.current = [];
     }
@@ -886,7 +888,7 @@ export default function CameraComponent({ onBack }){
         const ult = ultActive.current;
         const ux = ultPos.current.x;
         const uy = ultPos.current.y;
-        const elapsed = (now - (ultTimer.current - 5000)) / 5000; // 0→1 over 5s
+        const elapsed = (now - (ultTimer.current - config.ultDuration)) / config.ultDuration;
         const progress = Math.min(1, elapsed);
 
         switch(ult){
@@ -1100,6 +1102,26 @@ export default function CameraComponent({ onBack }){
           drawConnectors(ctx, pts, HAND_CONNECTIONS, {color:"#00d4ff", lineWidth:3});
           drawLandmarks(ctx, pts, {color:"#fff", radius:2});
 
+          // 新手模式：显示当前检测到的手势名称
+          if(config.showHandName){
+            const rawSeal = checkFist(pts) ? '子' : checkPalmDown(pts) ? '午' :
+              checkOpen(pts) ? '丑' : checkScissor(pts) ? '寅' :
+              checkTiger(pts) ? '卯' : checkRock(pts) ? '辰' :
+              checkPinch(pts) ? '巳' : checkIndex(pts) ? '未' : null;
+            if(rawSeal){
+              const sn = SEAL_NAMES[rawSeal];
+              const wrist = pts[0];
+              const sx = (1 - wrist.x) * canvas.width;
+              const sy = wrist.y * canvas.height - 30;
+              ctx.save();
+              ctx.font = 'bold 16px "Rajdhani", sans-serif';
+              ctx.textAlign = 'center';
+              ctx.fillStyle = 'rgba(255,255,255,0.8)';
+              ctx.fillText(`${sn.emoji} ${sn.seal} · ${sn.gesture}`, sx, sy);
+              ctx.restore();
+            }
+          }
+
           // 手势优先级链
           const fist     = checkFist(pts);
           const scissor  = !fist && checkScissor(pts);
@@ -1125,8 +1147,8 @@ export default function CameraComponent({ onBack }){
             if(match){
               // 触发大招！
               ultActive.current = match;
-              ultTimer.current = Date.now() + 5000;
-              ultCooldown.current = Date.now() + 8000;
+              ultTimer.current = Date.now() + config.ultDuration;
+              ultCooldown.current = Date.now() + config.ultCooldown;
               ultPos.current = { x: screenX, y: screenY };
               comboBuffer.current = [];
               comboDisplay.current = [];

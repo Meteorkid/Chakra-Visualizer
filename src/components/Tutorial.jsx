@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../LanguageContext';
+import { useGame } from '../GameContext';
 import './Tutorial.css';
 
 const JUTSU_IDS = ['rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei','rasenshuriken','susano','amaterasu','tsukuyomi'];
@@ -397,6 +398,7 @@ const ChakraParticles = () => {
 
 const Tutorial = ({ onStart }) => {
   const { lang, setLang, t } = useLanguage();
+  const { mode, setMode } = useGame();
   const [selectedJutsu, setSelectedJutsu] = useState(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(false);
@@ -486,10 +488,18 @@ const Tutorial = ({ onStart }) => {
       {/* Scanline overlay */}
       <div className="scanlines" />
 
-      {/* 语言切换按钮 */}
-      <button className="lang-btn" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}>
-        {lang === 'en' ? '中文' : 'EN'}
-      </button>
+      {/* 控制按钮组 */}
+      <div className="control-group">
+        <button className="control-btn" onClick={() => setLang(lang === 'en' ? 'zh' : 'en')}>
+          {lang === 'en' ? '中文' : 'EN'}
+        </button>
+        <button
+          className={`control-btn mode-btn ${mode === 'master' ? 'active' : ''}`}
+          onClick={() => setMode(mode === 'novice' ? 'master' : 'novice')}
+        >
+          {mode === 'novice' ? t('noviceMode') : t('masterMode')}
+        </button>
+      </div>
 
       {/* Hero Section */}
       <header className={`hero ${heroVisible ? 'visible' : ''}`}>

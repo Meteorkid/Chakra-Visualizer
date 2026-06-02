@@ -13,6 +13,10 @@ export const en = {
 
   // Section
   selectTechnique: "SELECT TECHNIQUE",
+  noviceMode: "Novice",
+  masterMode: "Master",
+  noviceDesc: "Easier gestures, longer timeouts, shows hand name",
+  masterDesc: "Stricter gestures, shorter timeouts, no hints",
 
   // CTA
   activateWebcam: "Activate Webcam",
@@ -197,6 +201,10 @@ export const zh = {
 
   // Section
   selectTechnique: "选择忍术",
+  noviceMode: "新手模式",
+  masterMode: "大师模式",
+  noviceDesc: "手势更宽松，超时更长，显示手势名",
+  masterDesc: "手势更严格，超时更短，无提示",
 
   // CTA
   activateWebcam: "开启摄像头",
