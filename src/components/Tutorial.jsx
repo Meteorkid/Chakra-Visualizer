@@ -490,6 +490,39 @@ const Tutorial = ({ onStart }) => {
         <img src="/assets/naruto-sitting.png" alt="" className="character-img naruto-float" />
       </div>
 
+      {/* 动态技能特效 */}
+      <div className="skill-effects">
+        {/* 螺旋丸 */}
+        <div className="skill-rasengan r1" />
+        <div className="skill-rasengan r2" />
+        <div className="skill-rasengan r3" />
+        {/* 千鸟闪电 */}
+        <div className="skill-chidori c1" />
+        <div className="skill-chidori c2" />
+        <div className="skill-chidori c3" />
+        {/* 火遁火焰 */}
+        <div className="skill-fire f1" />
+        <div className="skill-fire f2" />
+        <div className="skill-fire f3" />
+        <div className="skill-fire f4" />
+        <div className="skill-fire f5" />
+        <div className="skill-fire f6" />
+        {/* 写轮眼脉冲 */}
+        <div className="skill-sharingan-pulse sp1" />
+        <div className="skill-sharingan-pulse sp2" />
+        <div className="skill-sharingan-pulse sp3" />
+        {/* 地爆天星 */}
+        <div className="skill-chibaku cb1" />
+        <div className="skill-chibaku cb2" />
+        {/* 查克拉能量线 */}
+        <div className="skill-chakra-lines">
+          <div className="chakra-line cl1" />
+          <div className="chakra-line cl2" />
+          <div className="chakra-line cl3" />
+          <div className="chakra-line cl4" />
+        </div>
+      </div>
+
       <div className="chakra-swirl swirl-1" />
       <div className="chakra-swirl swirl-2" />
       <div className="chakra-swirl swirl-3" />
