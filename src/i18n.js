@@ -129,6 +129,53 @@ export const en = {
         "Point your palm downward (fingertips below wrist)",
         "Hold steady — a dark sphere forms and debris rises!"
       ]
+    },
+    rasenshuriken: {
+      name: "Rasenshuriken",
+      kanji: "風遁·螺旋手裏剣",
+      description: "Wind Release: Rasenshuriken — Naruto's ultimate technique combining Rasengan with wind-nature chakra.",
+      gesture: "Combo: 子→丑→寅→卯",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 张开手掌 (丑)",
+        "3. V sign (寅)",
+        "4. 竖大拇指 (卯) — Wind Release!"
+      ]
+    },
+    susano: {
+      name: "Susanoo",
+      kanji: "須佐能乎",
+      description: "Susanoo — the ultimate defense, a colossal humanoid avatar made of chakra.",
+      gesture: "Combo: 子→未→巳→午",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 食指伸直 (未)",
+        "3. 捏合 (巳)",
+        "4. 手掌朝下 (午) — Susanoo awakens!"
+      ]
+    },
+    amaterasu: {
+      name: "Amaterasu",
+      kanji: "天照",
+      description: "Amaterasu — black flames that burn anything in existence, inextinguishable.",
+      gesture: "Combo: 子→丑→午→未",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 张开手掌 (丑)",
+        "3. 手掌朝下 (午)",
+        "4. 食指伸直 (未) — Amaterasu!"
+      ]
+    },
+    tsukuyomi: {
+      name: "Tsukuyomi",
+      kanji: "月読",
+      description: "Tsukuyomi — a genjutsu that traps the victim in an illusory world controlled by the caster.",
+      gesture: "Combo: 子→午→未",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 手掌朝下 (午)",
+        "3. 食指伸直 (未) — Tsukuyomi!"
+      ]
     }
   }
 };
@@ -263,6 +310,53 @@ export const zh = {
         "五指伸直",
         "手掌朝下（指尖低于手腕）",
         "保持稳定 — 黑色球体形成，碎石升起！"
+      ]
+    },
+    rasenshuriken: {
+      name: "风遁·螺旋手里剑",
+      kanji: "風遁·螺旋手裏剣",
+      description: "风遁·螺旋手里剑 — 鸣人仙人模式终极奥义，将螺旋丸与风遁查克拉结合。",
+      gesture: "结印: 子→丑→寅→卯",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 张开手掌 (丑)",
+        "3. V sign (寅)",
+        "4. 竖大拇指 (卯) — 风遁发动！"
+      ]
+    },
+    susano: {
+      name: "须佐能乎",
+      kanji: "須佐能乎",
+      description: "须佐能乎 — 终极防御，由查克拉凝聚的巨大人形战甲。",
+      gesture: "结印: 子→未→巳→午",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 食指伸直 (未)",
+        "3. 捏合 (巳)",
+        "4. 手掌朝下 (午) — 须佐能乎觉醒！"
+      ]
+    },
+    amaterasu: {
+      name: "天照",
+      kanji: "天照",
+      description: "天照 — 永不熄灭的黑色烈焰，能焚烧一切存在。",
+      gesture: "结印: 子→丑→午→未",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 张开手掌 (丑)",
+        "3. 手掌朝下 (午)",
+        "4. 食指伸直 (未) — 天照发动！"
+      ]
+    },
+    tsukuyomi: {
+      name: "月读",
+      kanji: "月読",
+      description: "月读 — 将受害者困在施术者控制的幻术世界中的终极幻术。",
+      gesture: "结印: 子→午→未",
+      instructions: [
+        "1. 握拳 (子)",
+        "2. 手掌朝下 (午)",
+        "3. 食指伸直 (未) — 月读发动！"
       ]
     }
   }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../LanguageContext';
 import './Tutorial.css';
 
-const JUTSU_IDS = ['rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei'];
+const JUTSU_IDS = ['rasengan','chidori','fireball','hollow-purple','sharingan','shadow-clone','eight-gates','chibaku-tensei','rasenshuriken','susano','amaterasu','tsukuyomi'];
 const JUTSU_COLORS = {
   rasengan: { color: '#38bdf8', colorDark: '#0ea5e9', glow: 'rgba(56,189,248,0.6)' },
   chidori: { color: '#a78bfa', colorDark: '#7c3aed', glow: 'rgba(167,139,250,0.6)' },
@@ -12,15 +12,21 @@ const JUTSU_COLORS = {
   'shadow-clone': { color: '#818cf8', colorDark: '#6366f1', glow: 'rgba(129,140,248,0.6)' },
   'eight-gates': { color: '#22d3ee', colorDark: '#06b6d4', glow: 'rgba(34,211,238,0.6)' },
   'chibaku-tensei': { color: '#a855f7', colorDark: '#9333ea', glow: 'rgba(168,85,247,0.6)' },
+  rasenshuriken: { color: '#0ea5e9', colorDark: '#0284c7', glow: 'rgba(14,165,233,0.6)' },
+  susano: { color: '#7c3aed', colorDark: '#6d28d9', glow: 'rgba(124,58,237,0.6)' },
+  amaterasu: { color: '#1e1e1e', colorDark: '#000000', glow: 'rgba(80,0,120,0.6)' },
+  tsukuyomi: { color: '#dc2626', colorDark: '#991b1b', glow: 'rgba(220,38,38,0.6)' },
 };
 const JUTSU_ANIME = {
   rasengan: 'Naruto', chidori: 'Naruto', fireball: 'Naruto',
   'hollow-purple': 'Jujutsu Kaisen', sharingan: 'Naruto',
   'shadow-clone': 'Naruto', 'eight-gates': 'Naruto', 'chibaku-tensei': 'Naruto',
+  rasenshuriken: 'Naruto', susano: 'Naruto', amaterasu: 'Naruto', tsukuyomi: 'Naruto',
 };
 const JUTSU_HANDS = {
   rasengan: 'right', chidori: 'left', fireball: 'either', 'hollow-purple': 'either',
   sharingan: 'either', 'shadow-clone': 'either', 'eight-gates': 'either', 'chibaku-tensei': 'either',
+  rasenshuriken: 'combo', susano: 'combo', amaterasu: 'combo', tsukuyomi: 'combo',
 };
 
 const jutsuData = [
@@ -383,6 +389,54 @@ const GestureIllustration = ({ jutsu, size = 160 }) => {
     );
   }
 
+  // Combo Jutsu — 结印序列图标
+  if (jutsu.id === 'rasenshuriken' || jutsu.id === 'susano' || jutsu.id === 'amaterasu' || jutsu.id === 'tsukuyomi') {
+    return (
+      <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
+        <defs>
+          <radialGradient id={`glow-${jutsu.id}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={c} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill={`url(#glow-${jutsu.id})`} />
+        {/* 结印序列环 */}
+        <circle cx="100" cy="100" r="60" fill="none" stroke={c} strokeWidth="2" strokeDasharray="8,4" opacity="0.6"/>
+        <circle cx="100" cy="100" r="45" fill="none" stroke={c} strokeWidth="1.5" opacity="0.4"/>
+        {/* 中心大招图标 */}
+        {jutsu.id === 'rasenshuriken' && <>
+          <polygon points="100,50 110,90 100,85 90,90" fill={c} opacity="0.8"/>
+          <polygon points="100,150 110,110 100,115 90,110" fill={c} opacity="0.8"/>
+          <polygon points="50,100 90,90 85,100 90,110" fill={c} opacity="0.8"/>
+          <polygon points="150,100 110,90 115,100 110,110" fill={c} opacity="0.8"/>
+          <circle cx="100" cy="100" r="12" fill={c} opacity="0.9"/>
+        </>}
+        {jutsu.id === 'susano' && <>
+          <circle cx="100" cy="65" r="15" fill={c} opacity="0.7"/>
+          <rect x="92" y="80" width="16" height="50" rx="4" fill={c} opacity="0.6"/>
+          <line x1="70" y1="95" x2="130" y2="95" stroke={c} strokeWidth="4" opacity="0.5"/>
+          <line x1="85" y1="130" x2="75" y2="160" stroke={c} strokeWidth="4" opacity="0.5"/>
+          <line x1="115" y1="130" x2="125" y2="160" stroke={c} strokeWidth="4" opacity="0.5"/>
+        </>}
+        {jutsu.id === 'amaterasu' && <>
+          <path d="M 100,60 Q 115,80 105,100 Q 120,90 110,110 Q 125,105 115,125 Q 100,140 85,125 Q 75,105 90,110 Q 80,90 95,100 Q 85,80 100,60 Z" fill={c} opacity="0.8"/>
+          <circle cx="100" cy="100" r="8" fill="#1a0000" opacity="0.9"/>
+        </>}
+        {jutsu.id === 'tsukuyomi' && <>
+          <circle cx="100" cy="100" r="25" fill="none" stroke={c} strokeWidth="3" opacity="0.8"/>
+          <circle cx="100" cy="100" r="10" fill={c} opacity="0.9"/>
+          <circle cx="100" cy="100" r="4" fill="#1a0000" opacity="0.9"/>
+          <line x1="100" y1="60" x2="100" y2="140" stroke={c} strokeWidth="1.5" opacity="0.3"/>
+          <line x1="60" y1="100" x2="140" y2="100" stroke={c} strokeWidth="1.5" opacity="0.3"/>
+        </>}
+        {/* 结印步骤数 */}
+        <text x="100" y="180" textAnchor="middle" fill={c} fontSize="14" fontFamily="Bebas Neue" opacity="0.7">
+          {jutsu.id === 'tsukuyomi' ? '3-SEAL' : '4-SEAL'}
+        </text>
+      </svg>
+    );
+  }
+
   // Pinch — Hollow Purple
   return (
     <svg width={s} height={s} viewBox="0 0 200 200" className="gesture-svg">
@@ -635,7 +689,7 @@ const Tutorial = ({ onStart }) => {
               </div>
             </div>
             <div className="card-footer">
-              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : t('rightHand')}</span>
+              <span className="card-hand">{jutsu.hand === 'either' ? t('eitherHand') : jutsu.hand === 'left' ? t('leftHand') : jutsu.hand === 'combo' ? '🔮 COMBO' : t('rightHand')}</span>
               <span className="card-arrow">→</span>
             </div>
             <div className="card-glow-border" />

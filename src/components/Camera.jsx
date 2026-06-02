@@ -45,6 +45,16 @@ export default function CameraComponent({ onBack }){
   const chibakuSphereSize = useRef(0);
   const chibakuPos = useRef({ x: 0, y: 0 });
 
+  // ========== 结印系统 refs ==========
+  const comboBuffer = useRef([]);        // 结印缓冲区
+  const comboTimer = useRef(null);       // 超时计时器
+  const lastGestureTime = useRef(0);     // 上次手势时间
+  const comboDisplay = useRef([]);       // 显示用的结印序列
+  const ultCooldown = useRef(0);         // 大招冷却
+  const ultActive = useRef(null);        // 当前激活的大招
+  const ultTimer = useRef(0);           // 大招持续时间
+  const ultPos = useRef({ x: 0, y: 0 }); // 大招位置
+
   // ========== 手势检测函数 ==========
 
   function fingerExtended(pts, tipIdx, pipIdx){
@@ -122,6 +132,75 @@ export default function CameraComponent({ onBack }){
     // 手掌朝下：指尖 y 坐标大于手腕
     const avgTipY = (pts[8].y + pts[12].y + pts[16].y + pts[20].y) / 4;
     return avgTipY > pts[0].y + 0.04;
+  }
+
+  function checkIndex(pts){
+    // 只有食指伸直
+    return fingerClearlyUp(pts, 8, 6, 5) &&
+           !fingerClearlyUp(pts, 12, 10, 9) &&
+           !fingerClearlyUp(pts, 16, 14, 13) &&
+           !fingerClearlyUp(pts, 20, 18, 17);
+  }
+
+  // ========== 结印系统 ==========
+
+  // 手势→结印名映射
+  function detectSeal(pts){
+    if(checkFist(pts))     return '子';
+    if(checkOpen(pts))     return '丑';
+    if(checkScissor(pts))  return '寅';
+    if(checkTiger(pts))    return '卯';
+    if(checkRock(pts))     return '辰';
+    if(checkPinch(pts))    return '巳';
+    if(checkPalmDown(pts)) return '午';
+    if(checkIndex(pts))    return '未';
+    return null;
+  }
+
+  // 大招结印序列定义
+  const ULT_SEQUENCES = {
+    'rasenshuriken': ['子','丑','寅','卯'],
+    'susano':      ['子','未','巳','午'],
+    'amaterasu':     ['子','丑','午','未'],
+    'tsukuyomi':     ['子','午','未'],
+  };
+
+  // 检查缓冲区是否匹配任何大招序列
+  function checkComboMatch(buffer){
+    for(const [ultName, seq] of Object.entries(ULT_SEQUENCES)){
+      const bufSlice = buffer.slice(-seq.length);
+      if(bufSlice.length === seq.length && bufSlice.every((s,i) => s === seq[i])){
+        return ultName;
+      }
+    }
+    return null;
+  }
+
+  // 推入结印并检查匹配
+  function pushSeal(seal){
+    const now = Date.now();
+    // 3秒超时清空
+    if(now - lastGestureTime.current > 3000){
+      comboBuffer.current = [];
+      comboDisplay.current = [];
+    }
+    lastGestureTime.current = now;
+
+    // 去重：连续相同手势不重复推入
+    if(comboBuffer.current.length > 0 && comboBuffer.current[comboBuffer.current.length-1] === seal){
+      return null;
+    }
+
+    comboBuffer.current.push(seal);
+    comboDisplay.current = [...comboBuffer.current];
+
+    // 限制缓冲区长度
+    if(comboBuffer.current.length > 6){
+      comboBuffer.current.shift();
+    }
+
+    // 检查匹配
+    return checkComboMatch(comboBuffer.current);
   }
 
   // ========== 粒子生成函数 ==========
@@ -436,6 +515,221 @@ export default function CameraComponent({ onBack }){
     ctx.restore();
   }
 
+  // ========== 大招特效绘制函数 ==========
+
+  function drawRasenshuriken(ctx, x, y, size, progress){
+    ctx.save();
+    const time = Date.now() * 0.003;
+    const r = size * (0.5 + progress * 0.5);
+
+    // 外层风刃光环
+    for(let i = 0; i < 4; i++){
+      const angle = time + (i * Math.PI / 2);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(x + Math.cos(angle) * r * 2, y + Math.sin(angle) * r * 2);
+      ctx.strokeStyle = `rgba(100,200,255,${0.3 * progress})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+
+    // 旋转手里剑叶片
+    for(let i = 0; i < 4; i++){
+      const angle = time * 2 + (i * Math.PI / 2);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(r * 0.8, -r * 0.15);
+      ctx.lineTo(r, 0);
+      ctx.lineTo(r * 0.8, r * 0.15);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(60,180,255,${0.7 * progress})`;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 中心螺旋丸核心
+    const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, r * 0.4);
+    coreGrad.addColorStop(0, `rgba(255,255,255,${0.9 * progress})`);
+    coreGrad.addColorStop(0.4, `rgba(100,200,255,${0.7 * progress})`);
+    coreGrad.addColorStop(1, `rgba(30,100,200,0)`);
+    ctx.beginPath(); ctx.arc(x, y, r * 0.4, 0, Math.PI * 2);
+    ctx.fillStyle = coreGrad; ctx.fill();
+
+    // 外层能量环
+    ctx.beginPath(); ctx.arc(x, y, r * 0.7, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(150,220,255,${0.4 * progress})`;
+    ctx.lineWidth = 2; ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawSusano(ctx, x, y, size, progress){
+    ctx.save();
+    const time = Date.now() * 0.001;
+
+    // 外壳层（最外层）
+    if(progress > 0.3){
+      const shellAlpha = Math.min(1, (progress - 0.3) / 0.3);
+      const shellGrad = ctx.createRadialGradient(x, y - size * 0.3, 0, x, y - size * 0.3, size * 1.5);
+      shellGrad.addColorStop(0, `rgba(100,50,180,${0.15 * shellAlpha})`);
+      shellGrad.addColorStop(1, `rgba(60,20,120,0)`);
+      ctx.beginPath(); ctx.arc(x, y - size * 0.3, size * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = shellGrad; ctx.fill();
+    }
+
+    // 肌肉层
+    if(progress > 0.15){
+      const muscleAlpha = Math.min(1, (progress - 0.15) / 0.3);
+      const mGrad = ctx.createRadialGradient(x, y - size * 0.2, 0, x, y - size * 0.2, size);
+      mGrad.addColorStop(0, `rgba(120,60,200,${0.3 * muscleAlpha})`);
+      mGrad.addColorStop(0.6, `rgba(80,30,160,${0.15 * muscleAlpha})`);
+      mGrad.addColorStop(1, `rgba(50,10,100,0)`);
+      ctx.beginPath(); ctx.arc(x, y - size * 0.2, size, 0, Math.PI * 2);
+      ctx.fillStyle = mGrad; ctx.fill();
+    }
+
+    // 骨架层（核心）
+    const boneAlpha = Math.min(1, progress / 0.3);
+    // 头骨
+    ctx.beginPath(); ctx.arc(x, y - size * 0.6, size * 0.25, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(140,80,220,${0.6 * boneAlpha})`; ctx.fill();
+    // 脊椎
+    ctx.beginPath();
+    ctx.moveTo(x, y - size * 0.35);
+    ctx.lineTo(x, y + size * 0.3);
+    ctx.strokeStyle = `rgba(140,80,220,${0.5 * boneAlpha})`;
+    ctx.lineWidth = 4; ctx.stroke();
+    // 肋骨
+    for(let i = 0; i < 4; i++){
+      const ry = y - size * 0.25 + i * size * 0.12;
+      const rw = size * 0.3 * (1 - i * 0.1);
+      ctx.beginPath();
+      ctx.ellipse(x, ry, rw, size * 0.03, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(140,80,220,${0.4 * boneAlpha})`;
+      ctx.lineWidth = 2; ctx.stroke();
+    }
+
+    // 能量眼睛
+    if(progress > 0.5){
+      const eyeAlpha = Math.min(1, (progress - 0.5) / 0.3);
+      ctx.beginPath(); ctx.arc(x - size * 0.08, y - size * 0.62, size * 0.04, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,50,80,${0.8 * eyeAlpha})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(x + size * 0.08, y - size * 0.62, size * 0.04, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,50,80,${0.8 * eyeAlpha})`; ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawAmaterasu(ctx, x, y, size, progress){
+    ctx.save();
+    const time = Date.now() * 0.002;
+
+    // 黑色火焰核心
+    const flameR = size * progress;
+    for(let i = 0; i < 8; i++){
+      const angle = (i / 8) * Math.PI * 2 + time * 0.5;
+      const flicker = Math.sin(time * 3 + i) * 0.2 + 0.8;
+      const fr = flameR * flicker * (0.6 + Math.random() * 0.4);
+      const fx = x + Math.cos(angle) * fr * 0.3;
+      const fy = y + Math.sin(angle) * fr * 0.3 - fr * 0.3;
+
+      ctx.beginPath();
+      ctx.moveTo(fx, fy);
+      ctx.quadraticCurveTo(
+        fx + Math.cos(angle + 0.5) * fr * 0.5,
+        fy - fr * 0.6,
+        fx + Math.cos(angle) * fr * 0.2,
+        fy - fr
+      );
+      ctx.quadraticCurveTo(
+        fx - Math.cos(angle - 0.5) * fr * 0.5,
+        fy - fr * 0.6,
+        fx, fy
+      );
+      ctx.fillStyle = `rgba(10,0,10,${0.7 * progress})`;
+      ctx.fill();
+    }
+
+    // 紫色内焰
+    const innerR = flameR * 0.4;
+    const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, innerR);
+    innerGrad.addColorStop(0, `rgba(80,0,120,${0.5 * progress})`);
+    innerGrad.addColorStop(1, `rgba(20,0,30,0)`);
+    ctx.beginPath(); ctx.arc(x, y, innerR, 0, Math.PI * 2);
+    ctx.fillStyle = innerGrad; ctx.fill();
+
+    // 火星粒子
+    for(let i = 0; i < 6; i++){
+      const pAngle = time * 2 + i * 1.05;
+      const pDist = flameR * (0.5 + Math.sin(time + i) * 0.3);
+      const px = x + Math.cos(pAngle) * pDist;
+      const py = y + Math.sin(pAngle) * pDist;
+      ctx.beginPath(); ctx.arc(px, py, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(120,0,180,${0.6 * progress})`;
+      ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
+  function drawTsukuyomi(ctx, x, y, size, progress){
+    ctx.save();
+    const time = Date.now() * 0.001;
+
+    // 红色幻术空间背景
+    const spaceR = size * 2 * progress;
+    const spaceGrad = ctx.createRadialGradient(x, y, 0, x, y, spaceR);
+    spaceGrad.addColorStop(0, `rgba(180,0,0,${0.4 * progress})`);
+    spaceGrad.addColorStop(0.5, `rgba(100,0,0,${0.2 * progress})`);
+    spaceGrad.addColorStop(1, `rgba(40,0,0,0)`);
+    ctx.beginPath(); ctx.arc(x, y, spaceR, 0, Math.PI * 2);
+    ctx.fillStyle = spaceGrad; ctx.fill();
+
+    // 十字架
+    if(progress > 0.3){
+      const crossAlpha = Math.min(1, (progress - 0.3) / 0.3);
+      const cw = size * 0.15;
+      const ch = size * 1.2;
+      // 竖
+      ctx.fillStyle = `rgba(200,0,0,${0.6 * crossAlpha})`;
+      ctx.fillRect(x - cw/2, y - ch/2, cw, ch);
+      // 横
+      ctx.fillRect(x - ch * 0.4, y - ch * 0.15, ch * 0.8, cw);
+
+      // 十字架光晕
+      ctx.shadowColor = `rgba(255,0,0,${0.5 * crossAlpha})`;
+      ctx.shadowBlur = 20;
+      ctx.fillRect(x - cw/2, y - ch/2, cw, ch);
+      ctx.shadowBlur = 0;
+    }
+
+    // 旋转的勾玉环
+    for(let i = 0; i < 6; i++){
+      const angle = time + (i * Math.PI * 2 / 6);
+      const orbitR = size * 0.8;
+      const sx = x + Math.cos(angle) * orbitR;
+      const sy = y + Math.sin(angle) * orbitR;
+      ctx.beginPath(); ctx.arc(sx, sy, 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,0,0,${0.5 * progress})`;
+      ctx.fill();
+    }
+
+    // 中心眼睛
+    if(progress > 0.5){
+      const eyeAlpha = Math.min(1, (progress - 0.5) / 0.3);
+      ctx.beginPath(); ctx.arc(x, y, size * 0.15, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180,0,0,${0.7 * eyeAlpha})`; ctx.fill();
+      ctx.beginPath(); ctx.arc(x, y, size * 0.06, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0,0,0,${0.9 * eyeAlpha})`; ctx.fill();
+    }
+
+    ctx.restore();
+  }
+
   useEffect(()=>{
 
     const video = videoRef.current;
@@ -494,6 +788,50 @@ export default function CameraComponent({ onBack }){
       if(hpSize > 2){
         spawnParticles(hollowPurplePos.current.x, hollowPurplePos.current.y, hpSize);
         drawHollowPurple(fxCtx, hollowPurplePos.current.x, hollowPurplePos.current.y, hpSize);
+      }
+
+      // ========== 大招渲染 ==========
+      const now = Date.now();
+      if(ultCooldown.current > now) ultCooldown.current = 0;
+      if(ultTimer.current > now){
+        const ult = ultActive.current;
+        const ux = ultPos.current.x;
+        const uy = ultPos.current.y;
+        const elapsed = (now - (ultTimer.current - 5000)) / 5000; // 0→1 over 5s
+        const progress = Math.min(1, elapsed);
+
+        switch(ult){
+          case 'rasenshuriken':
+            drawRasenshuriken(fxCtx, ux, uy, 150, progress);
+            spawnAuraParticles(ux, uy, progress * 0.8);
+            break;
+          case "susano":
+            drawSusano(fxCtx, ux, uy, 200, progress);
+            break;
+          case 'amaterasu':
+            drawAmaterasu(fxCtx, ux, uy, 120, progress);
+            break;
+          case 'tsukuyomi':
+            drawTsukuyomi(fxCtx, ux, uy, 180, progress);
+            break;
+        }
+      } else {
+        ultActive.current = null;
+      }
+
+      // ========== 结印显示 ==========
+      if(comboDisplay.current.length > 0){
+        const displayText = comboDisplay.current.join(' → ');
+        fxCtx.save();
+        fxCtx.font = 'bold 24px "Bebas Neue", sans-serif';
+        fxCtx.textAlign = 'center';
+        fxCtx.fillStyle = `rgba(198,40,40,${0.8})`;
+        fxCtx.fillText('结印: ' + displayText, fxCanvas.width / 2, fxCanvas.height - 80);
+        // 提示下一个
+        fxCtx.font = '16px "Rajdhani", sans-serif';
+        fxCtx.fillStyle = 'rgba(255,255,255,0.4)';
+        fxCtx.fillText('继续结印释放大招...', fxCanvas.width / 2, fxCanvas.height - 55);
+        fxCtx.restore();
       }
 
       // 统一粒子更新
@@ -617,6 +955,21 @@ export default function CameraComponent({ onBack }){
           const ty = (wrist.y + knuckle.y) / 2;
           const screenX = (1 - tx) * window.innerWidth;
           const screenY = ty * window.innerHeight;
+
+          // ========== 结印检测 ==========
+          const seal = detectSeal(pts);
+          if(seal && !ultActive.current && ultCooldown.current <= Date.now()){
+            const match = pushSeal(seal);
+            if(match){
+              // 触发大招！
+              ultActive.current = match;
+              ultTimer.current = Date.now() + 5000;
+              ultCooldown.current = Date.now() + 8000;
+              ultPos.current = { x: screenX, y: screenY };
+              comboBuffer.current = [];
+              comboDisplay.current = [];
+            }
+          }
 
           // 八门遁甲
           eightGatesPower.current[idx] += fist ? 0.05 : -0.15;
