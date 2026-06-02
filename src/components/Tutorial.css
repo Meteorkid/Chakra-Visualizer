@@ -546,6 +546,19 @@
   margin-bottom: 1.5rem;
   background: rgba(198,40,40,0.08);
 }
+.master-indicator {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #ff5252;
+  background: rgba(255,82,82,0.08);
+  border: 1px solid rgba(255,82,82,0.25);
+  padding: 4px 14px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
 
 .hero-title {
   position: relative;

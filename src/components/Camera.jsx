@@ -6,7 +6,7 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 
 export default function CameraComponent({ onBack }){
-  const { config } = useGame();
+  const { config, onSealSuccess, onSealInterrupted, onUltRelease, score, combo, perfectCount } = useGame();
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -265,6 +265,7 @@ export default function CameraComponent({ onBack }){
   function pushSeal(sealObj){
     const now = Date.now();
     if(now - lastGestureTime.current > config.sealTimeout){
+      if(comboBuffer.current.length > 0 && onSealInterrupted) onSealInterrupted();
       comboBuffer.current = [];
       comboDisplay.current = [];
     }
@@ -277,6 +278,7 @@ export default function CameraComponent({ onBack }){
 
     comboBuffer.current.push(sealObj);
     comboDisplay.current = [...comboBuffer.current];
+    if(onSealSuccess) onSealSuccess();
 
     if(comboBuffer.current.length > 6){
       comboBuffer.current.shift();
@@ -841,6 +843,15 @@ export default function CameraComponent({ onBack }){
       }
       fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
 
+      // 大师模式屏幕震动
+      if(config.screenShake && ultActive.current){
+        const shakeIntensity = 4;
+        const sx = (Math.random() - 0.5) * shakeIntensity;
+        const sy = (Math.random() - 0.5) * shakeIntensity;
+        fxCtx.save();
+        fxCtx.translate(sx, sy);
+      }
+
       // 写轮眼
       const ssSize = sharinganSize.current;
       if(ssSize > 2){
@@ -908,6 +919,34 @@ export default function CameraComponent({ onBack }){
         }
       } else {
         ultActive.current = null;
+      }
+
+      // ========== 大师模式 HUD ==========
+      if(config.enableScoring){
+        fxCtx.save();
+        // 分数
+        fxCtx.font = 'bold 32px "Bebas Neue", sans-serif';
+        fxCtx.textAlign = 'left';
+        fxCtx.fillStyle = 'rgba(255,255,255,0.8)';
+        fxCtx.fillText(`SCORE: ${score}`, 24, 45);
+        // 连击
+        if(combo > 1){
+          fxCtx.font = 'bold 22px "Bebas Neue", sans-serif';
+          fxCtx.fillStyle = '#ff5252';
+          fxCtx.fillText(`${combo}x COMBO`, 24, 72);
+          // 连击倍率
+          fxCtx.font = '14px "Rajdhani", sans-serif';
+          fxCtx.fillStyle = 'rgba(255,82,82,0.7)';
+          fxCtx.fillText(`×${(1 + (combo-1)*0.5).toFixed(1)} multiplier`, 24, 90);
+        }
+        // 完美释放次数
+        if(perfectCount > 0){
+          fxCtx.font = '14px "Rajdhani", sans-serif';
+          fxCtx.textAlign = 'right';
+          fxCtx.fillStyle = '#fbbf24';
+          fxCtx.fillText(`✨ Perfect: ${perfectCount}`, fxCanvas.width - 24, 45);
+        }
+        fxCtx.restore();
       }
 
       // ========== 结印显示 ==========
@@ -1074,6 +1113,11 @@ export default function CameraComponent({ onBack }){
       });
 
       particles.current = particles.current.filter(p => p.life > 0);
+
+      // 恢复屏幕震动
+      if(config.screenShake && ultActive.current){
+        fxCtx.restore();
+      }
     }
 
     animateEffects();
@@ -1152,6 +1196,7 @@ export default function CameraComponent({ onBack }){
               ultPos.current = { x: screenX, y: screenY };
               comboBuffer.current = [];
               comboDisplay.current = [];
+              if(onUltRelease) onUltRelease(match);
             }
           }
 

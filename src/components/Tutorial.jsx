@@ -504,6 +504,9 @@ const Tutorial = ({ onStart }) => {
       {/* Hero Section */}
       <header className={`hero ${heroVisible ? 'visible' : ''}`}>
         <div className="hero-badge">{t('badge')}</div>
+        {mode === 'master' && (
+          <div className="master-indicator">⚡ {t('masterMode')} — {t('masterDesc')}</div>
+        )}
         <h1 className="hero-title">
           <a
             href="https://github.com/Meteorkid/Chakra-Visualizer"
