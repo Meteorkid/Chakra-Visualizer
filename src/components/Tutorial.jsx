@@ -536,7 +536,7 @@ const Tutorial = ({ onStart }) => {
 
       {/* Hero Section */}
       <header className={`hero ${heroVisible ? 'visible' : ''}`}>
-        <div className="hero-badge">NINJA VISUALIZER</div>
+        <div className="hero-badge">火影忍者互动体验</div>
         <h1 className="hero-title">
           <a
             href="https://github.com/Meteorkid/Chakra-Visualizer"
@@ -544,7 +544,7 @@ const Tutorial = ({ onStart }) => {
             rel="noopener noreferrer"
             className="hero-title-link"
           >
-            <span className="hero-title-en">JUTSU</span>
+            <span className="hero-title-en">CHAKRA</span>
           </a>
         </h1>
         <p className="hero-subtitle">
@@ -669,7 +669,7 @@ const Tutorial = ({ onStart }) => {
       )}
 
       <footer className="footer">
-        Built with MediaPipe + Canvas 2D &nbsp;·&nbsp;
+        Chakra-Visualizer &nbsp;·&nbsp;
         <a href="https://github.com/Meteorkid/Chakra-Visualizer" target="_blank" rel="noopener noreferrer">GitHub</a>
         &nbsp;·&nbsp; Naruto &copy; Masashi Kishimoto
       </footer>
