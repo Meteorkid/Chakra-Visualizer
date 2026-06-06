@@ -76,3 +76,64 @@ fist → palmDown → open → scissor → rock → tiger → pinch → index
 - 结印序列不能有重复（ULT_SEQUENCES 中已定义13个）
 - 所有特效纯 Canvas 2D，不依赖外部资源
 - 翻译用 `t('key', { param: value })` 支持插值
+
+<!-- GSD:project-start source:PROJECT.md -->
+## Project
+
+**Chakra-Visualizer**
+
+火影忍者手势互动 Web App — 通过摄像头识别手部动作，触发 21 种忍术特效。基于 MediaPipe Hands 手势识别，支持双手同时施法、中英文双语、新手/大师模式切换。面向火影忍者粉丝和 Web 交互体验爱好者。
+
+**Core Value:** **手势识别准确触发忍术特效** — 用户做出正确手势时，屏幕立即呈现对应的忍术视觉效果。这是整个应用的核心体验，其他一切围绕它展开。
+
+### Constraints
+
+- **Tech Stack**: React 19 + Vite（已有），不引入新框架
+- **Performance**: Canvas 2D 渲染需保持 60fps，粒子上限 350
+- **Compatibility**: 需支持 Chrome/Edge（MediaPipe CDN 加载）
+- **Security**: HTTPS 必需，无后端，无敏感数据
+<!-- GSD:project-end -->
+
+<!-- GSD:stack-start source:STACK.md -->
+## Technology Stack
+
+Technology stack not yet documented. Will populate after codebase mapping or first phase.
+<!-- GSD:stack-end -->
+
+<!-- GSD:conventions-start source:CONVENTIONS.md -->
+## Conventions
+
+Conventions not yet established. Will populate as patterns emerge during development.
+<!-- GSD:conventions-end -->
+
+<!-- GSD:architecture-start source:ARCHITECTURE.md -->
+## Architecture
+
+Architecture not yet mapped. Follow existing patterns found in the codebase.
+<!-- GSD:architecture-end -->
+
+<!-- GSD:skills-start source:skills/ -->
+## Project Skills
+
+No project skills found. Add skills to any of: `.claude/skills/`, `.agents/skills/`, `.cursor/skills/`, `.github/skills/`, or `.codex/skills/` with a `SKILL.md` index file.
+<!-- GSD:skills-end -->
+
+<!-- GSD:workflow-start source:GSD defaults -->
+## GSD Workflow Enforcement
+
+Before using Edit, Write, or other file-changing tools, start work through a GSD command so planning artifacts and execution context stay in sync.
+
+Use these entry points:
+- `/gsd-quick` for small fixes, doc updates, and ad-hoc tasks
+- `/gsd-debug` for investigation and bug fixing
+- `/gsd-execute-phase` for planned phase work
+
+Do not make direct repo edits outside a GSD workflow unless the user explicitly asks to bypass it.
+<!-- GSD:workflow-end -->
+
+<!-- GSD:profile-start -->
+## Developer Profile
+
+> Profile not yet configured. Run `/gsd-profile-user` to generate your developer profile.
+> This section is managed by `generate-claude-profile` -- do not edit manually.
+<!-- GSD:profile-end -->
