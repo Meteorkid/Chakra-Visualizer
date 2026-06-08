@@ -231,17 +231,66 @@ export default function CameraComponent({ onBack, initialJutsu }) {
 
         switch (type) {
           case 'rasenshuriken':
-            effects.drawRasenshuriken(fxCtx, x, y, 150, progress);
-            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.8);
+            effects.drawRasenshuriken(fxCtx, x, y, 180, progress);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.9);
+            effects.spawnParticles(particleSystem.particles, x, y, 100);
             break;
           case "susano":
-            effects.drawSusano(fxCtx, x, y, 200, progress);
+            effects.drawSusano(fxCtx, x, y, 240, progress);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.7);
             break;
           case 'amaterasu':
-            effects.drawAmaterasu(fxCtx, x, y, 120, progress);
+            effects.drawAmaterasu(fxCtx, x, y, 150, progress);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.5);
             break;
           case 'tsukuyomi':
-            effects.drawTsukuyomi(fxCtx, x, y, 180, progress);
+            effects.drawTsukuyomi(fxCtx, x, y, 200, progress);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.6);
+            break;
+          case 'rasengan-big':
+            effects.drawRasengan(fxCtx, x, y, 240, progress);
+            effects.spawnChakraParticles(particleSystem.particles, x, y, 120, `rgba(80,180,255,`, `rgba(150,220,255,`);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.8);
+            break;
+          case 'bijuu-dama':
+            effects.drawBijuuDama(fxCtx, x, y, 300, progress);
+            effects.spawnBijuuParticles(particleSystem.particles, x, y, 200);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.7);
+            break;
+          case 'kirin':
+            effects.drawKirin(fxCtx, x, y, 250, progress);
+            effects.spawnLightningParticles(particleSystem.particles, x, y, 180);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.6);
+            break;
+          case 'totsuka':
+            effects.drawTotsuka(fxCtx, x, y, 220, progress);
+            effects.spawnSealParticles(particleSystem.particles, x, y, 150);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.5);
+            break;
+          case 'byakugou':
+            effects.drawByakugou(fxCtx, x, y, 240, progress);
+            effects.spawnChakraParticles(particleSystem.particles, x, y, 130, `rgba(255,180,210,`, `rgba(255,120,180,`);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.7);
+            break;
+          case 'sakura-impact':
+            effects.drawSakuraImpact(fxCtx, x, y, 250, progress);
+            effects.spawnSakuraParticles(particleSystem.particles, x, y, 160);
+            effects.spawnDebrisParticles(particleSystem.particles, x, y, 120);
+            break;
+          case 'sand-coffin':
+            effects.drawSandCoffin(fxCtx, x, y, 220, progress);
+            effects.spawnSandParticles(particleSystem.particles, x, y, 160);
+            effects.spawnDebrisParticles(particleSystem.particles, x, y, 100);
+            break;
+          case 'sand-shield':
+            effects.drawSandShield(fxCtx, x, y, 220, progress);
+            effects.spawnSandParticles(particleSystem.particles, x, y, 150);
+            effects.spawnDebrisParticles(particleSystem.particles, x, y, 90);
+            break;
+          case 'shinra':
+            effects.drawShinraTensei(fxCtx, x, y, 300, progress);
+            effects.spawnLightningParticles(particleSystem.particles, x, y, 200);
+            effects.spawnAuraParticles(particleSystem.particles, x, y, progress * 0.9);
             break;
         }
       }

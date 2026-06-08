@@ -26,6 +26,8 @@ describe('特效渲染模块 (effects.js)', () => {
       moveTo: vi.fn(),
       lineTo: vi.fn(),
       quadraticCurveTo: vi.fn(),
+      ellipse: vi.fn(),
+      rect: vi.fn(),
       translate: vi.fn(),
       rotate: vi.fn(),
       createRadialGradient: vi.fn(() => ({
@@ -184,6 +186,105 @@ describe('特效渲染模块 (effects.js)', () => {
       effects.drawTsukuyomi(mockCtx, 100, 100, 1, 0.5);
       expect(mockCtx.save).not.toHaveBeenCalled();
     });
+
+    it('drawRasengan 应在 size < 2 时跳过', () => {
+      effects.drawRasengan(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawRasengan 应正常绘制', () => {
+      effects.drawRasengan(mockCtx, 100, 100, 200, 0.8);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawBijuuDama 应在 size < 2 时跳过', () => {
+      effects.drawBijuuDama(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawBijuuDama 应正常绘制', () => {
+      effects.drawBijuuDama(mockCtx, 100, 100, 250, 0.9);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawKirin 应在 size < 2 时跳过', () => {
+      effects.drawKirin(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawKirin 应正常绘制', () => {
+      effects.drawKirin(mockCtx, 100, 100, 200, 0.7);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawTotsuka 应在 size < 2 时跳过', () => {
+      effects.drawTotsuka(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawTotsuka 应正常绘制', () => {
+      effects.drawTotsuka(mockCtx, 100, 100, 180, 0.6);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawByakugou 应在 size < 2 时跳过', () => {
+      effects.drawByakugou(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawByakugou 应正常绘制', () => {
+      effects.drawByakugou(mockCtx, 100, 100, 200, 0.8);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawSakuraImpact 应在 size < 2 时跳过', () => {
+      effects.drawSakuraImpact(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawSakuraImpact 应正常绘制', () => {
+      effects.drawSakuraImpact(mockCtx, 100, 100, 200, 0.7);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawSandCoffin 应在 size < 2 时跳过', () => {
+      effects.drawSandCoffin(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawSandCoffin 应正常绘制', () => {
+      effects.drawSandCoffin(mockCtx, 100, 100, 180, 0.8);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawSandShield 应在 size < 2 时跳过', () => {
+      effects.drawSandShield(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawSandShield 应正常绘制', () => {
+      effects.drawSandShield(mockCtx, 100, 100, 180, 0.7);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
+
+    it('drawShinraTensei 应在 size < 2 时跳过', () => {
+      effects.drawShinraTensei(mockCtx, 100, 100, 1, 0.5);
+      expect(mockCtx.save).not.toHaveBeenCalled();
+    });
+
+    it('drawShinraTensei 应正常绘制', () => {
+      effects.drawShinraTensei(mockCtx, 100, 100, 250, 0.9);
+      expect(mockCtx.save).toHaveBeenCalled();
+      expect(mockCtx.restore).toHaveBeenCalled();
+    });
   });
 
   describe('配置选项', () => {
@@ -215,6 +316,15 @@ describe('特效渲染模块 (effects.js)', () => {
       expect(typeof effects.spawnParticles).toBe('function');
       expect(typeof effects.updateParticles).toBe('function');
       expect(typeof effects.drawHollowPurple).toBe('function');
+      expect(typeof effects.drawRasengan).toBe('function');
+      expect(typeof effects.drawBijuuDama).toBe('function');
+      expect(typeof effects.drawKirin).toBe('function');
+      expect(typeof effects.drawTotsuka).toBe('function');
+      expect(typeof effects.drawByakugou).toBe('function');
+      expect(typeof effects.drawSakuraImpact).toBe('function');
+      expect(typeof effects.drawSandCoffin).toBe('function');
+      expect(typeof effects.drawSandShield).toBe('function');
+      expect(typeof effects.drawShinraTensei).toBe('function');
     });
   });
 });
