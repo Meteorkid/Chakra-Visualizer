@@ -8,9 +8,7 @@ function App() {
   const [initialJutsu, setInitialJutsu] = useState(null);
 
   const handleStart = (jutsuId = null) => {
-    if (jutsuId) {
-      setInitialJutsu(jutsuId);
-    }
+    setInitialJutsu(jutsuId);
     setShowCamera(true);
   };
 
@@ -20,7 +18,7 @@ function App() {
         <Tutorial onStart={handleStart} />
       ) : (
         <div className="camera-view">
-          <Camera initialJutsu={initialJutsu} onBack={() => setShowCamera(false)} />
+          <Camera initialJutsu={initialJutsu} onBack={() => { setInitialJutsu(null); setShowCamera(false); }} />
         </div>
       )}
     </>

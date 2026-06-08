@@ -59,12 +59,18 @@ export function GameProvider({ children }) {
   const sealCount = useRef(0);      // 当前大招用了几个印
   const sealInterrupted = useRef(false); // 是否被打断过
 
+  // 用 ref 追踪 combo 和 lastUltTime，避免 MediaPipe 回调中闭包过期
+  const comboRef = useRef(0);
+  const lastUltTimeRef = useRef(0);
+
   const handleSetMode = useCallback((newMode) => {
     setMode(newMode);
     try { localStorage.setItem('chakra-mode', newMode); } catch {}
     // 切换模式时重置分数
     setScore(0);
     setCombo(0);
+    comboRef.current = 0;
+    lastUltTimeRef.current = 0;
     setMaxCombo(0);
     setPerfectCount(0);
   }, []);
@@ -80,14 +86,16 @@ export function GameProvider({ children }) {
     sealCount.current = 0;
   }, []);
 
-  // 大招释放成功
+  // 大招释放成功（使用 ref 避免 MediaPipe 回调中的闭包过期问题）
   const onUltRelease = useCallback((ultName) => {
     const now = Date.now();
     const baseScore = ULT_SCORES[ultName] || 1000;
 
-    // 连击计算
-    const timeSinceLast = now - lastUltTime;
-    const newCombo = (timeSinceLast < 15000 && lastUltTime > 0) ? combo + 1 : 1;
+    // 连击计算（从 ref 读取最新值，不依赖闭包）
+    const timeSinceLast = now - lastUltTimeRef.current;
+    const newCombo = (timeSinceLast < 15000 && lastUltTimeRef.current > 0) ? comboRef.current + 1 : 1;
+    comboRef.current = newCombo;
+    lastUltTimeRef.current = now;
     setCombo(newCombo);
     setMaxCombo(prev => Math.max(prev, newCombo));
 
@@ -109,12 +117,14 @@ export function GameProvider({ children }) {
     sealInterrupted.current = false;
 
     return { totalScore, combo: newCombo, isPerfect, comboMultiplier, perfectMultiplier };
-  }, [combo, lastUltTime]);
+  }, []);
 
   // 重置游戏
   const resetGame = useCallback(() => {
     setScore(0);
     setCombo(0);
+    comboRef.current = 0;
+    lastUltTimeRef.current = 0;
     setMaxCombo(0);
     setPerfectCount(0);
     setLastUltTime(0);
