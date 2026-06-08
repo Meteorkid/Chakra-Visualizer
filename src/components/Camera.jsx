@@ -132,11 +132,11 @@ export default function CameraComponent({ onBack, initialJutsu }) {
     });
     gestureRef.current = { left: gestureLeft, right: gestureRight };
 
-    const particleSystem = createParticleSystem(350);
+    const particleSystem = createParticleSystem(800);
     particleSystemRef.current = particleSystem;
 
     const effects = createEffectsSystem({
-      particleLimit: 350,
+      particleLimit: 800,
       getTime: () => Date.now() * 0.001,
       particleSystem,
     });

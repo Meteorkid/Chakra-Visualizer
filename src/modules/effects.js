@@ -1016,24 +1016,24 @@ export function createEffectsSystem(config = {}) {
     const time = getTime() * 2;
     const alpha = Math.min(1, progress * 1.5);
 
-    // 全屏黑暗滤镜
-    ctx.fillStyle = `rgba(0,0,0,${0.08 * alpha})`;
+    // 全屏暗紫滤镜（screen 模式下用亮色模拟暗场）
+    ctx.fillStyle = `rgba(60,0,100,${0.06 * alpha})`;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    // 外层扩散火焰圈（多层）
+    // 外层扩散火焰圈（3 层，明亮紫红色——screen 模式适配）
     for (let layer = 0; layer < 3; layer++) {
       const layerR = size * (1.2 + layer * 0.4);
-      const layerAlpha = 0.15 - layer * 0.04;
+      const layerAlpha = 0.18 - layer * 0.04;
       for (let i = 0; i < 16; i++) {
         const angle = time * 1.5 + (i / 16) * Math.PI * 2 + layer * 0.3;
         const flameR = layerR * (0.9 + Math.sin(time * 2.5 + i * 1.2 + layer) * 0.15);
         const fx = x + Math.cos(angle) * flameR;
         const fy = y + Math.sin(angle) * flameR;
         const flameGrad = ctx.createRadialGradient(fx, fy, 0, fx, fy, 30 + layer * 10);
-        flameGrad.addColorStop(0, `rgba(80,0,120,${layerAlpha * alpha})`);
-        flameGrad.addColorStop(0.3, `rgba(50,0,90,${layerAlpha * 0.7 * alpha})`);
-        flameGrad.addColorStop(0.6, `rgba(30,0,60,${layerAlpha * 0.3 * alpha})`);
-        flameGrad.addColorStop(1, `rgba(10,0,30,0)`);
+        flameGrad.addColorStop(0, `rgba(160,0,255,${layerAlpha * alpha})`);
+        flameGrad.addColorStop(0.3, `rgba(120,0,200,${layerAlpha * 0.7 * alpha})`);
+        flameGrad.addColorStop(0.6, `rgba(80,0,150,${layerAlpha * 0.3 * alpha})`);
+        flameGrad.addColorStop(1, `rgba(40,0,80,0)`);
         ctx.beginPath();
         ctx.arc(fx, fy, 30 + layer * 10, 0, Math.PI * 2);
         ctx.fillStyle = flameGrad;
@@ -1041,22 +1041,23 @@ export function createEffectsSystem(config = {}) {
       }
     }
 
-    // 核心黑焰球体
+    // 核心火焰球体（明亮紫→白热，适配 screen 混合）
     const coreGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 0.5);
-    coreGrad.addColorStop(0, `rgba(40,0,60,${0.98 * alpha})`);
-    coreGrad.addColorStop(0.3, `rgba(25,0,45,${0.9 * alpha})`);
-    coreGrad.addColorStop(0.6, `rgba(15,0,30,${0.7 * alpha})`);
-    coreGrad.addColorStop(1, `rgba(5,0,15,0)`);
+    coreGrad.addColorStop(0, `rgba(255,200,255,${0.95 * alpha})`);
+    coreGrad.addColorStop(0.2, `rgba(200,80,255,${0.85 * alpha})`);
+    coreGrad.addColorStop(0.5, `rgba(140,0,220,${0.6 * alpha})`);
+    coreGrad.addColorStop(0.8, `rgba(80,0,150,${0.3 * alpha})`);
+    coreGrad.addColorStop(1, `rgba(40,0,80,0)`);
     ctx.beginPath();
     ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
     ctx.fillStyle = coreGrad;
     ctx.fill();
 
-    // 紫色火焰纹理（更多更密）
-    for (let i = 0; i < 10; i++) {
-      const flameAngle = time * 4 + (i / 10) * Math.PI * 2;
+    // 紫色火焰纹理（12 条，更亮）
+    for (let i = 0; i < 12; i++) {
+      const flameAngle = time * 4 + (i / 12) * Math.PI * 2;
       const flameLen = size * (0.6 + Math.sin(time * 2 + i) * 0.2);
-      const flameWidth = 2 + Math.sin(time * 3 + i * 0.7) * 1.5;
+      const flameWidth = 2.5 + Math.sin(time * 3 + i * 0.7) * 1.5;
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.quadraticCurveTo(
@@ -1065,12 +1066,12 @@ export function createEffectsSystem(config = {}) {
         x + Math.cos(flameAngle) * flameLen,
         y + Math.sin(flameAngle) * flameLen
       );
-      ctx.strokeStyle = `rgba(140,0,220,${(0.5 + Math.sin(time * 2 + i) * 0.2) * alpha})`;
+      ctx.strokeStyle = `rgba(180,40,255,${(0.55 + Math.sin(time * 2 + i) * 0.2) * alpha})`;
       ctx.lineWidth = flameWidth;
       ctx.stroke();
     }
 
-    // 黑色内焰（更暗更密集）
+    // 内焰射线（明亮紫白，替代不可见的黑色内焰）
     for (let i = 0; i < 8; i++) {
       const innerAngle = time * 5 + (i / 8) * Math.PI * 2;
       const innerLen = size * 0.35;
@@ -1080,31 +1081,32 @@ export function createEffectsSystem(config = {}) {
         x + Math.cos(innerAngle) * innerLen,
         y + Math.sin(innerAngle) * innerLen
       );
-      ctx.strokeStyle = `rgba(10,0,20,${0.6 * alpha})`;
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = `rgba(200,100,255,${0.5 * alpha})`;
+      ctx.lineWidth = 3;
       ctx.stroke();
     }
 
-    // 火花飞溅效果
-    for (let i = 0; i < 12; i++) {
-      const sparkAngle = time * 6 + (i / 12) * Math.PI * 2;
+    // 火花飞溅（更亮）
+    for (let i = 0; i < 15; i++) {
+      const sparkAngle = time * 6 + (i / 15) * Math.PI * 2;
       const sparkDist = size * (0.4 + Math.sin(time * 4 + i * 1.5) * 0.3);
       const sx = x + Math.cos(sparkAngle) * sparkDist;
       const sy = y + Math.sin(sparkAngle) * sparkDist;
-      const sparkSize = 1.5 + Math.sin(time * 5 + i) * 1;
+      const sparkSize = 2 + Math.sin(time * 5 + i) * 1;
       ctx.beginPath();
       ctx.arc(sx, sy, sparkSize, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(180,50,255,${0.7 * alpha})`;
+      ctx.fillStyle = `rgba(220,120,255,${0.8 * alpha})`;
       ctx.fill();
     }
 
-    // 中心白热核心
-    const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, size * 0.2);
-    innerGrad.addColorStop(0, `rgba(200,100,255,${0.9 * alpha})`);
-    innerGrad.addColorStop(0.5, `rgba(120,0,180,${0.5 * alpha})`);
-    innerGrad.addColorStop(1, `rgba(60,0,100,0)`);
+    // 中心白热核心（脉冲）
+    const pulseR = size * (0.18 + Math.sin(time * 4) * 0.03);
+    const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, pulseR);
+    innerGrad.addColorStop(0, `rgba(255,220,255,${0.95 * alpha})`);
+    innerGrad.addColorStop(0.4, `rgba(220,140,255,${0.6 * alpha})`);
+    innerGrad.addColorStop(1, `rgba(140,40,220,0)`);
     ctx.beginPath();
-    ctx.arc(x, y, size * 0.2, 0, Math.PI * 2);
+    ctx.arc(x, y, pulseR, 0, Math.PI * 2);
     ctx.fillStyle = innerGrad;
     ctx.fill();
 
@@ -1244,12 +1246,12 @@ export function createEffectsSystem(config = {}) {
       ctx.stroke();
     }
 
-    // 螺旋粒子线（10 条，增强密度）
+    // 螺旋粒子线（10 条）
     for (let i = 0; i < 10; i++) {
       const baseAngle = time * 2 + (i * Math.PI / 5);
       ctx.beginPath();
       ctx.moveTo(x, y);
-      for (let t = 0; t < 1; t += 0.015) {
+      for (let t = 0; t < 1; t += 0.04) {
         const spiralAngle = baseAngle + t * Math.PI * 5;
         const dist = t * r * 2;
         const sx = x + Math.cos(spiralAngle) * dist;
@@ -1314,20 +1316,20 @@ export function createEffectsSystem(config = {}) {
     const r = size * (0.4 + progress * 0.6);
     const alpha = Math.min(1, progress * 1.2);
 
-    // 全屏暗场（增强）
+    // 全屏暗紫场（screen 模式适配——用亮紫替代暗色）
     if (progress > 0.08) {
-      const darkAlpha = Math.min(0.18, (progress - 0.08) * 0.25);
-      ctx.fillStyle = `rgba(10,0,30,${darkAlpha * alpha})`;
+      const darkAlpha = Math.min(0.12, (progress - 0.08) * 0.18);
+      ctx.fillStyle = `rgba(50,0,100,${darkAlpha * alpha})`;
       ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
-    // 外层黑紫能量场（增强）
+    // 外层紫黑能量场（screen 模式适配——提亮）
     const outerField = ctx.createRadialGradient(x, y, 0, x, y, r * 3.5);
-    outerField.addColorStop(0, `rgba(80,0,160,${0.18 * alpha})`);
-    outerField.addColorStop(0.2, `rgba(50,0,120,${0.12 * alpha})`);
-    outerField.addColorStop(0.5, `rgba(25,0,70,${0.06 * alpha})`);
-    outerField.addColorStop(0.8, `rgba(10,0,35,${0.02 * alpha})`);
-    outerField.addColorStop(1, `rgba(5,0,15,0)`);
+    outerField.addColorStop(0, `rgba(140,40,255,${0.15 * alpha})`);
+    outerField.addColorStop(0.2, `rgba(100,20,200,${0.1 * alpha})`);
+    outerField.addColorStop(0.5, `rgba(60,10,140,${0.05 * alpha})`);
+    outerField.addColorStop(0.8, `rgba(30,5,80,${0.02 * alpha})`);
+    outerField.addColorStop(1, `rgba(15,0,40,0)`);
     ctx.beginPath(); ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
     ctx.fillStyle = outerField; ctx.fill();
 
@@ -1336,7 +1338,7 @@ export function createEffectsSystem(config = {}) {
       const baseAngle = time * 1.2 + (i / 8) * Math.PI * 2;
       ctx.beginPath();
       ctx.moveTo(x + Math.cos(baseAngle) * r * 2.5, y + Math.sin(baseAngle) * r * 2.5);
-      for (let t = 0; t < 1; t += 0.03) {
+      for (let t = 0; t < 1; t += 0.06) {
         const angle = baseAngle + t * Math.PI * 3;
         const dist = r * 2.5 * (1 - t);
         ctx.lineTo(x + Math.cos(angle) * dist, y + Math.sin(angle) * dist);
@@ -1867,9 +1869,9 @@ export function createEffectsSystem(config = {}) {
         const sy = spiralY;
         const dotSize = 8 + layer * 2 + Math.sin(time * 3 + i) * 2;
         const sandGrad = ctx.createRadialGradient(sx, sy, 0, sx, sy, dotSize);
-        sandGrad.addColorStop(0, `rgba(220,190,110,${(0.55 - layer * 0.1) * alpha})`);
-        sandGrad.addColorStop(0.5, `rgba(190,160,70,${(0.3 - layer * 0.06) * alpha})`);
-        sandGrad.addColorStop(1, `rgba(150,120,40,0)`);
+        sandGrad.addColorStop(0, `rgba(235,210,140,${(0.6 - layer * 0.1) * alpha})`);
+        sandGrad.addColorStop(0.5, `rgba(210,185,100,${(0.35 - layer * 0.06) * alpha})`);
+        sandGrad.addColorStop(1, `rgba(180,155,70,0)`);
         ctx.beginPath(); ctx.arc(sx, sy, dotSize, 0, Math.PI * 2);
         ctx.fillStyle = sandGrad; ctx.fill();
       }
